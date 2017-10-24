@@ -1,27 +1,47 @@
 <template>
-  <section class="container">
+  <div>
     <div>
-      <logo/>
-      <h1 class="title">
-        rankings-frontend
-      </h1>
-      <h2 class="subtitle">
-        Rankings front end
-      </h2>
-      <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
-        <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
-      </div>
+      Available Weeks
     </div>
-  </section>
+
+    <week-item
+    v-for="week in weeks"
+    :key="week.id"
+    :week="week">
+    </week-item>
+  </div>
 </template>
 
 <script>
 import Logo from '~/components/Logo.vue'
+import WeekItem from '~/components/WeekItem.vue'
+
+//import { ALL_WEEKS_QUERY } from '@/assets/graphql.js'
+//import allWeeks from '~/apollo/queries/allWeeks.gql'
+import weeks from '~/apollo/queries/allWeeksSimple.gql'
+
 
 export default {
   components: {
+    WeekItem,
     Logo
+  },
+  methods: {
+    runit: function() {
+      console.log('ran it')
+      console.log(this.weeks)
+    }
+  },
+  data: function() {
+    return {
+      allWeeks: []
+    }
+  },
+  apollo: {
+    weeks: {
+      prefetch: true,
+      query: weeks
+    }
   }
 }
 </script>

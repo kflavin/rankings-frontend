@@ -1,0 +1,10 @@
+{
+  allWeeks {
+    edges {
+      node {
+        id
+        date
+      }
+    }
+  }
+}

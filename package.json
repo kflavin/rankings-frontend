@@ -13,7 +13,12 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "nuxt": "^1.0.0-rc11"
+    "@nuxtjs/apollo": "2.1.1",
+    "apollo-client": "1.9.3",
+    "graphql": "0.11.7",
+    "graphql-tag": "2.5.0",
+    "nuxt": "^1.0.0-rc11",
+    "vue-apollo": "2.1.0-rc.8"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

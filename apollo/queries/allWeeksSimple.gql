@@ -1,0 +1,6 @@
+{
+  weeks {
+    id
+    date
+  }
+}
