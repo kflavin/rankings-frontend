@@ -1,0 +1,11 @@
+query rankingsBySubmissionId($id: Int = 1) {
+  submissions(id: $id) {
+    id
+    rankings{
+      position
+      team {
+        name
+      }
+    }
+  }
+}

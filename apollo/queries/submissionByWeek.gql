@@ -1,0 +1,11 @@
+query SubmissionsByWeek($id: Int = 1) {
+  weeks(id: $id) {
+    id
+    submissions {
+      id
+      user {
+        name
+      }
+    }
+  }
+}
