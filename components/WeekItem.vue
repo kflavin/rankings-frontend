@@ -1,5 +1,5 @@
 <template>
-  <div>Week number: <router-link :to="`week/${week.id}`">{{week.id}} {{week.date}}</router-link></div>
+  <div>Week {{week.id}}: <router-link :to="`week/${week.id}`">{{week.date}}</router-link></div>
 </template>
 
 <script>

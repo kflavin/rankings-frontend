@@ -1,14 +1,17 @@
 <template>
   <div>
     <div>
-      Available Weeks
+      <h1>Per Week Rankings</h1><br/>
     </div>
 
-    <week-item
-    v-for="week in weeks"
-    :key="week.id"
-    :week="week">
-    </week-item>
+    <div>
+      <week-item
+      v-for="week in weeks"
+      :key="week.id"
+      :week="week">
+      </week-item>
+    </div>
+
   </div>
 </template>
 

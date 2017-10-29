@@ -1,17 +1,22 @@
 <template>
   <div>
-    Submissions for this week
-
-    <submission-item
-    v-for="submission in weeks[0].submissions"
-    :key="submission.id"
-    :submission="submission">
-    </submission-item>
-
     <div>
-      <router-link to="/">Weeks Index</router-link>
+      <h1>Submissions for Week {{weeks[0].id}}</h1><br/>
     </div>
 
+    <div>
+      <submission-item
+      v-for="submission in weeks[0].submissions"
+      :key="submission.id"
+      :submission="submission">
+      </submission-item>
+
+      <div>
+        <br/>
+        <router-link to="/">Weeks Index</router-link>
+      </div>
+
+    </div>
   </div>
 </template>
 

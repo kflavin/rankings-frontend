@@ -1,6 +1,6 @@
 <template>
 
-  <div><router-link :to="`/submission/${submission.id}`">User submission: {{submission.user.name}}</router-link></div>
+  <div><router-link :to="`/submission/${submission.id}`">User: {{submission.user.name}}</router-link></div>
 </template>
 
 <script>

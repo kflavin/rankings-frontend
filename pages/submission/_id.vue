@@ -1,14 +1,19 @@
 <template>
   <div>
-    <div>Rankings</div>
-    <ranking-item
-    v-for="ranking in rankings"
-    :key="ranking.id"
-    :ranking="ranking">
-    </ranking-item>
+    <div>
+      <h1>Week {{data.week.id}} rankings for {{data.user.name}}</h1><br />
+    </div>
+    <div>
+      <ranking-item
+      v-for="ranking in rankings"
+      :key="ranking.id"
+      :ranking="ranking">
+      </ranking-item>
+    </div>
 
     <div>
-      <router-link to="/">Return to week {{week.date}}</router-link>
+      <br />
+      <router-link :to="`/week/${data.week.id}`">Return to week {{data.week.id}} listings</router-link>
     </div>
   </div>
 </template>
@@ -41,7 +46,7 @@
     data: function() {
       return {
         'rankings': [],
-        'week': {}
+        'data': {}
       }
     },
     apollo: {
@@ -59,10 +64,10 @@
           }
         }
       },
-      week: {
+      data: {
         update: function(data) {
           console.log(data.submissions[0].week)
-          return data.submissions[0].week
+          return data.submissions[0]
         },
         query: weekOfSubmission,
         variables: function() {
