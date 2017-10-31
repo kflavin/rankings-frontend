@@ -30,12 +30,8 @@
       SubmissionItem
     },
     created: function() {
-      console.log("params")
-      console.log(this.$route.params)
-      console.log("your weeks")
-      console.log(this.weeks)
-      console.log("your submissions")
-//      console.log(this.weeks[0].submissions)
+      console.log("state is=")
+      console.log(this.$store.state)
     },
     data: function() {
       return {
