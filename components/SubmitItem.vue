@@ -1,26 +1,27 @@
 <template>
   <div>
-    <div>{{rank}}: <input type="text" v-model="query" @blur.prevent="displayList=false"></div>
+    <div>{{rank}}: <input type="text" ref="input" v-model="query" @blur="onBlur"></div>
     <div>
 
       <div v-show="displayList">
         <transition-group name="fade" tag="ul" class="Results">
-          <li v-for="item in filtered" :key="item" @mousedown="choose(item)">
-            <span>{{item}}</span>
+          <li v-for="item in filtered" :key="item.name" @mousedown.stop.prevent="onClick(item.name)">
+            <span>{{item.name}}</span>
           </li>
         </transition-group>
       </div>
 
-
     </div>
-
   </div>
 </template>
 
 <script>
   export default {
     props: {
-      team: '',
+      items: {
+        type: Array,
+        required: true
+      },
       rank: {
         type: Number,
         required: true
@@ -36,12 +37,10 @@
     },
     computed: {
       filtered() {
-        console.log("filtering")
-        console.log(this.query)
-        console.log(this.selections)
         if (this.query.length >= this.startAt) {
           var items = this.items.filter(item => {
-            return item.toLowerCase().indexOf(this.query.toLowerCase()) > -1 && this.query.length < item.length && !this.selections.includes(item)
+            var teamName = item.name
+            return teamName.toLowerCase().indexOf(this.query.toLowerCase()) > -1 && this.query.length < teamName.length && !this.selections.includes(teamName)
           })
 
           if (items.length >= 1) {
@@ -52,41 +51,35 @@
 
         }
       }
-//      filtered() {
-//        console.log("filtering")
-//        console.log(this.query)
-//        this.displayList = true
-//        if(this.query.length >= this.startAt) {
-//
-//          return this.items.filter(item => {
-//            return item.toLowerCase().indexOf(this.query.toLowerCase()) > -1 && this.query.length < item.length
-//          })
-//
-//        }
-//        console.log("....")
-//      },
     },
     data () {
       return {
         query: '',
         displayList: false,
-        items: ["abcdef", "abcasdfasdf", "abcmadfmasdfn"],
       }
     },
-//    watch: {
-//      selection() {
-//        console.log("selection updated!")
-//        console.log(this.selection)
-//      }
-//    },
     methods: {
       reset () {
         this.query = ''
       },
-      choose(item) {
-        console.log("item chosen")
-        this.query = item
-        this.$emit('updateselection', item)
+      onClick(selection) {
+        this.query = selection
+        this.$store.commit('addSelection', selection)
+        this.query = selection
+      },
+      onBlur() {
+        this.displayList=false
+        var selection = this.$refs.input.value
+        var selections = this.$store.state.selections
+
+        var team = this.items.find((item) => {
+          return item.name.toLowerCase() == selection.toLowerCase()
+        })
+
+        if (team != null) {
+          this.query = team.name
+          this.$store.commit('addSelection', team.name)
+        }
       }
     }
   }
