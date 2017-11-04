@@ -1,5 +1,6 @@
 <template>
   <div>
+    <nav-bar></nav-bar>
     <div>
       <h1>Submissions for Week {{weeks[0].id}}</h1><br/>
     </div>
@@ -24,10 +25,12 @@
 <script>
   import SubmissionsByWeek from '@/apollo/queries/submissionByWeek'
   import SubmissionItem from '@/components/SubmissionItem'
+  import NavBar from '~/components/NavBar'
 
   export default {
     components: {
-      SubmissionItem
+      SubmissionItem,
+      NavBar
     },
     created: function() {
       console.log("state is=")

@@ -14,8 +14,6 @@ const mutations = {
   },
 
   addSelection: function(state, selection) {
-    console.log("ADD SELECTIONS CALLED")
-
     if (state.selections.indexOf(selection) < 0) {
       console.log("adding... " + selection)
       state.selections.push(selection)
@@ -28,11 +26,9 @@ const mutations = {
     state.selections.slice(state.selection.indexOf(selection), 1)
   },
   setSelections: function(state, selections) {
-    console.log("SET SELECTIONS CALLED")
     state.selections = selections;
   },
   clearSelections: function(state) {
-    console.log("CLEAR SELECTIONS CALLED")
     state.selections = []
   }
 }

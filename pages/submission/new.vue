@@ -1,5 +1,6 @@
 <template>
   <div>
+    <nav-bar></nav-bar>
     <div>
       <h1>New Submission for week ...</h1>
     </div>
@@ -23,10 +24,12 @@
 <script>
   import allTeams from '@/apollo/queries/allTeams'
   import SubmitItem from '@/components/SubmitItem'
+  import NavBar from '~/components/NavBar'
 
   export default {
     components: {
-      SubmitItem
+      SubmitItem,
+      NavBar
     },
     methods: {
       reset() {
@@ -62,6 +65,9 @@
           return this.filtered.length < 1
         }
       }
+    },
+    created: function() {
+      this.$store.commit('clearSelections');
     },
     data: function() {
       return {
