@@ -38,7 +38,13 @@
     methods: {
       validate() {
         console.log("validating")
-        console.log(this.$store.state.selections)
+        var selections = this.$store.state.selections
+        console.log(selections)
+        if (selections.length !== this.positions) {
+          alert("Invalid number of entries")
+        } else {
+          alert("submitted!")
+        }
       },
       reset() {
         this.query = ''

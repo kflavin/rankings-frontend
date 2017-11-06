@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div>{{rank}}: <input type="text" ref="input" v-model="query" @blur="onBlur"></div>
+    <div style="float: left">{{rank}}: <input type="text" ref="input" v-model="query" @blur="onBlur"></div>
+    <div></div>
+    <div style="clear: both"></div>
     <div>
 
       <div v-show="displayList">
@@ -63,7 +65,11 @@
         this.query = ''
       },
       onClick(selection) {
-        this.query = selection
+        this.query = selection.toLowerCase()
+
+        if (this.$store.state.selections.contains(selection)) {
+          // selection already exists
+        }
         this.$store.commit('addSelection', selection)
         this.query = selection
       },
@@ -87,6 +93,11 @@
 
 
 <style>
+.Results {
+  position: absolute;
+  background-color: white;
+  cursor: pointer;
+}
   .overlay {
     position: fixed; /* Sit on top of the page content */
     width: 10px; /* Full width (cover the whole page) */
