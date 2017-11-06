@@ -1,0 +1,6 @@
+{
+    currentWeek {
+        id
+        date
+    }
+}
