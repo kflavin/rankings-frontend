@@ -2,7 +2,7 @@
   <div>
     <div><h1>{{login ? "Login" : "Register"}}</h1></div>
     <div>
-      <div v-show="message">
+      <div v-show="message" class="message">
         {{message}}
       </div>
       <div v-if="!login">
@@ -20,6 +20,10 @@
       <input id="login" type="button" :value="login ? 'Login' : 'Register'" @click="confirm()">
       <input id="toggle" type="button" :value="login ? 'Register for an account':'Login with your Account'" @click="login=!login">
     </div>
+    <div>
+      <br/>
+      <router-link to="/">Weeks Index</router-link>
+    </div>
   </div>
 </template>
 
@@ -28,13 +32,17 @@
   import signInUser from '@/apollo/queries/auth/signInUser'
 
   export default {
+    created: function() {
+      console.log("hello world")
+      console.log(this.$route)
+    },
     data: function() {
       return {
         login: true,
         email: "",
         user: "",
         password: "",
-        message: ""
+        message: this.$route.query.message || ''
       }
     },
     methods: {
@@ -69,3 +77,9 @@
     }
   }
 </script>
+
+<style>
+  .message {
+    color: red
+  }
+</style>

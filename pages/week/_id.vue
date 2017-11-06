@@ -6,11 +6,14 @@
     </div>
 
     <div>
+
+      <div >
       <submission-item
       v-for="submission in weeks[0].submissions"
       :key="submission.id"
       :submission="submission">
       </submission-item>
+      </div>
 
       <div>
         <br/>
@@ -35,6 +38,8 @@
     created: function() {
       console.log("state is=")
       console.log(this.$store.state)
+      console.log('weeks length')
+      console.log(this.weeks)
     },
     data: function() {
       return {

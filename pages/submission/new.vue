@@ -2,7 +2,7 @@
   <div>
     <nav-bar></nav-bar>
     <div>
-      <h1>New Submission for week ...</h1>
+      <h1>New Submission for week {{week.date}}</h1>
     </div>
     <div>
       <submit-item
@@ -12,6 +12,8 @@
       :selections="selections"
       :items="teams">
       </submit-item>
+      <button @click="validate">Submit</button>
+      <button @click="reset">Reset</button>
     </div>
 
     <div>
@@ -23,6 +25,7 @@
 
 <script>
   import allTeams from '@/apollo/queries/allTeams'
+  import currentWeek from '@/apollo/queries/currentWeek'
   import SubmitItem from '@/components/SubmitItem'
   import NavBar from '~/components/NavBar'
 
@@ -31,7 +34,12 @@
       SubmitItem,
       NavBar
     },
+    middleware: 'auth',
     methods: {
+      validate() {
+        console.log("validating")
+        console.log(this.$store.state.selections)
+      },
       reset() {
         this.query = ''
       },
@@ -84,7 +92,13 @@
           this.$store.commit('setTeams', data.teams);
           return data.teams;
         }
-      }
+      },
+      week: {
+        query: currentWeek,
+        update: function(data) {
+          return data.currentWeek
+        }
+      } 
     }
   }
 </script>

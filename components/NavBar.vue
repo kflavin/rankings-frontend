@@ -26,6 +26,7 @@
         this.$store.commit('clearCurrentUser')
         localStorage.removeItem("RANKINGS_USERID")
         localStorage.removeItem("RANKINGS_TOKEN")
+        this.$router.push({name: 'auth-login', query: {message: 'You have been logged out.'}})
       }
     }
   }
