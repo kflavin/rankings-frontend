@@ -1,13 +1,15 @@
 <template>
   <div>
-    <div style="float: left">{{rank}}: <input type="text" ref="input" v-model="query" @blur="onBlur"></div>
-    <div></div>
+    <div style="float: left; padding-right: 7px;">{{rank}}: <input type="text" ref="input" v-model="query"
+                                                                   @keyup="displayList=true"
+                                                                   @blur="onBlur($event)"></div>
+    <div style="color: red;" ref="message">{{message}}</div>
     <div style="clear: both"></div>
     <div>
 
       <div v-show="displayList">
         <transition-group name="fade" tag="ul" class="Results">
-          <li v-for="item in filtered" :key="item.name" @mousedown.stop.prevent="onClick(item.name)">
+          <li v-for="item in filtered" :key="item.name" @mousedown.stop.prevent="onClick(item.name, $event)">
             <span>{{item.name}}</span>
           </li>
         </transition-group>
@@ -20,10 +22,6 @@
 <script>
   export default {
     props: {
-      items: {
-        type: Array,
-        required: true
-      },
       rank: {
         type: Number,
         required: true
@@ -31,6 +29,10 @@
       startAt: {
         type: Number,
         default: 2
+      },
+      teams: {
+        type: Array,
+        default: []
       },
       selections: {
         type: Array,
@@ -40,16 +42,16 @@
     computed: {
       filtered() {
         if (this.query.length >= this.startAt) {
-          var items = this.items.filter(item => {
-            var teamName = item.name
-            return teamName.toLowerCase().indexOf(this.query.toLowerCase()) > -1 && this.query.length < teamName.length && !this.selections.includes(teamName)
+          var teams = this.teams.filter(team => {
+            var teamName = team.name
+//            return teamName.toLowerCase().indexOf(this.query.toLowerCase()) > -1
+            return teamName.toLowerCase().startsWith(this.query.toLowerCase())
+              && this.query.length < teamName.length
+              && !this.selections.includes(teamName.toLowerCase())
+              && this.displayList
           })
 
-          if (items.length >= 1) {
-            this.displayList = true
-          }
-
-          return items
+          return teams
 
         }
       }
@@ -57,35 +59,55 @@
     data () {
       return {
         query: '',
+        persistedQuery: '',
         displayList: false,
+        message: ""
       }
+    },
+    created: function() {
+      this.$emit('initSelections')
+      console.log("Selections empty: " + this.selections)
     },
     methods: {
       reset () {
         this.query = ''
       },
-      onClick(selection) {
+      onClick(selection, e) {
+        console.log("onClick")
+        this.displayList = false
         this.query = selection.toLowerCase()
+        this.persistedQuery = selection
 
-        if (this.$store.state.selections.contains(selection)) {
-          // selection already exists
+        if (this.selections.includes(selection)) {
+          this.message = `You already used ${selection}`
+        } else {
+          this.$emit('addteam', selection)
+          this.query = selection
         }
-        this.$store.commit('addSelection', selection)
-        this.query = selection
+        console.log(this.selections)
       },
-      onBlur() {
+      onBlur(e) {
+        console.log("onBlur")
         this.displayList=false
-        var selection = this.$refs.input.value
-        var selections = this.$store.state.selections
+        var selection = this.query
 
-        var team = this.items.find((item) => {
-          return item.name.toLowerCase() == selection.toLowerCase()
+        // Remove the old team, if one was given.
+        if (this.persistedQuery != '') {
+          this.$emit('removeteam', this.persistedQuery)
+        }
+
+        var team = this.teams.find((team) => {
+          return team.name.toLowerCase() == selection.toLowerCase()
         })
 
+        // If the team exists, add them.
         if (team != null) {
-          this.query = team.name
-          this.$store.commit('addSelection', team.name)
+          this.query = this.persistedQuery = team.name
+          this.$emit('addteam', team.name)
+        } else {
+          this.persistedQuery = ''
         }
+        console.log(this.selections)
       }
     }
   }

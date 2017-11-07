@@ -9,8 +9,6 @@
     name: 'SubmissionItem',
     props: ['submission'],
     created: function() {
-      console.log("created")
-      console.log(this.submission)
     }
   }
 

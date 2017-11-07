@@ -2,7 +2,7 @@
   <div>
     <nav-bar></nav-bar>
     <div>
-      <h1>Submissions for Week {{weeks[0].id}}</h1><br/>
+      <h1>Submissions for Week <span v-if="weeks">{{weeks[0].id}}</span></h1><br/>
     </div>
 
     <div>
@@ -36,10 +36,6 @@
       NavBar
     },
     created: function() {
-      console.log("state is=")
-      console.log(this.$store.state)
-      console.log('weeks length')
-      console.log(this.weeks)
     },
     data: function() {
       return {
@@ -58,7 +54,6 @@
         },
         error(error) {
           console.error(error)
-          console.log(error)
         }
       }
     }

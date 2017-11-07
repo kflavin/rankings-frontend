@@ -33,8 +33,6 @@
 
   export default {
     created: function() {
-      console.log("hello world")
-      console.log(this.$route)
     },
     data: function() {
       return {
@@ -66,7 +64,6 @@
             this.message = "Invalid login."
           }.bind(this))
         } else {
-          console.log("Register the user")
         }
       },
       saveUser: function(id, token) {

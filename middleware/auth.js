@@ -1,7 +1,6 @@
 // export default function ({store, error}) {
 export default function (context) {
   console.log('middleware function...')
-  console.log(context.route)
   if (context.store.state.userId === 0) {
     console.log('YOu are not logged in')
     // context.error({message: 'You are not logged in', statusCode: 403})

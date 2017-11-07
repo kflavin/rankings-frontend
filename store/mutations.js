@@ -15,15 +15,13 @@ const mutations = {
 
   addSelection: function(state, selection) {
     if (state.selections.indexOf(selection) < 0) {
-      console.log("adding... " + selection)
       state.selections.push(selection)
     } else {
-      console.log("already exists...")
     }
-    console.log(state.selections)
   },
   delSelection: function(state, selection) {
-    state.selections.slice(state.selection.indexOf(selection), 1)
+    state.selections.splice(state.selections.indexOf(selection), 1)
+
   },
   setSelections: function(state, selections) {
     state.selections = selections;

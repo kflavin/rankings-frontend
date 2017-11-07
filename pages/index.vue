@@ -35,8 +35,6 @@ export default {
   },
   methods: {
     runit: function() {
-      console.log('ran it')
-      console.log(this.weeks)
     }
   },
   data: function() {

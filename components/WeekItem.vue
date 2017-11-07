@@ -8,8 +8,6 @@ export default {
   name: 'WeekItem',
   props: ['week'],
   created: function() {
-    console.log("created")
-    console.log(this.week)
   }
 }
 

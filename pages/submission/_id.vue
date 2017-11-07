@@ -2,7 +2,7 @@
   <div>
     <nav-bar></nav-bar>
     <div>
-      <h1>Week {{data.week.id}} rankings for {{data.user.name}}</h1><br />
+      <h1>Week <span v-if="data.week">{{data.week.id}}</span> rankings for <span v-if="data.user">{{data.user.name}}</span></h1><br />
     </div>
     <div>
       <ranking-item
@@ -14,7 +14,7 @@
 
     <div>
       <br />
-      <router-link :to="`/week/${data.week.id}`">Return to week {{data.week.id}} listings</router-link>
+      <router-link :to="`/week/${data.week.id}`">Return to week <span v-if="data.week">{{data.week.id}}</span> listings</router-link>
     </div>
   </div>
 </template>
@@ -36,8 +36,6 @@
 
   export default {
     created: function() {
-      console.log("submissions")
-      console.log(this.submissions)
 //      console.log("rankings by submission id")
 //      console.log(rankingsBySubmissionId)
 //      console.log(this.submissions)
@@ -56,9 +54,7 @@
       rankings: {
         query: rankingsBySubmissionId,
         update: function(data) {
-          console.log(data.submissions[0].rankings)
           var arr = data.submissions[0].rankings.slice(0)
-          console.log(sortByKey(arr, "position"));
           return arr
         },
         variables: function() {
@@ -69,7 +65,6 @@
       },
       data: {
         update: function(data) {
-          console.log(data.submissions[0].week)
           return data.submissions[0]
         },
         query: weekOfSubmission,
