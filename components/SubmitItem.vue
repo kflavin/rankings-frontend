@@ -1,6 +1,7 @@
 <template>
   <div>
     <div style="float: left; padding-right: 7px;">{{rank}}: <input type="text" ref="input" v-model="query"
+                                                                   @click="displayList=true"
                                                                    @keyup="displayList=true"
                                                                    @blur="onBlur($event)"></div>
     <div style="color: red;" ref="message">{{message}}</div>
@@ -90,6 +91,17 @@
         console.log("onBlur")
         this.displayList=false
         var selection = this.query
+
+        // Not implemented yet
+//        selection = this.teams.filter(team => {
+//          return team.name.toLowerCase().startsWith(this.query.toLowerCase())
+//        })
+//
+//        if (selection.length > 0) {
+//          selection = selection[0].name
+//        } else {
+//          selection = this.query
+//        }
 
         // Remove the old team, if one was given.
         if (this.persistedQuery != '') {

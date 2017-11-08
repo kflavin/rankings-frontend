@@ -1,0 +1,11 @@
+mutation createSubmission($userid: Int!, $weekid: Int!, $teams: [String!]!) {
+  createSubmission(
+    weekid: $weekid,
+    teams: $teams,
+    userid: $userid
+  ) {
+    submission {
+      id
+    }
+  }
+}
