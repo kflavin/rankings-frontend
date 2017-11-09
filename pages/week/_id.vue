@@ -35,26 +35,50 @@
       SubmissionItem,
       NavBar
     },
-    created: function() {
+    created() {
+      this.weekid = this.$route.params.id
+//      console.log("Your weeks---")
+//      console.log(this.$route.params)
+//      console.log(this.weeks)
+//      console.log("done...")
+
+
+
+//      this.$apollo.addSmartQuery('weeks', {
+//          query: SubmissionsByWeek,
+//            variables: function() {
+//            return {
+//              id: this.weekid
+//            }
+//          },
+//          error(error) {
+//            console.error(error)
+//          }
+//      })
+
+
+
+
+
     },
     data: function() {
       return {
-        date: '',
+        weekid: 1,
         weeks: []
       }
     },
     apollo: {
       weeks: {
-        prefetch: true,
         query: SubmissionsByWeek,
         variables: function() {
           return {
-            id: this.$route.params.id
+            id: this.weekid
           }
         },
         error(error) {
           console.error(error)
-        }
+        },
+        fetchPolicy: 'network-only'
       }
     }
   }

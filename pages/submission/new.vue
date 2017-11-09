@@ -59,21 +59,28 @@
         this.query = ''
       },
       submit() {
+
+        console.log("user id is: " + this.$store.state.userId)
+        var userid = this.$store.state.userId
+
         if (this.selections.length !== this.positions) {
           alert("Invalid number of entries")
           return
         }
 
+
         this.$apollo.mutate({
           mutation: submitUserRankings,
           variables: {
             weekid: parseInt(this.week.id),
-            userid: 1,
+            userid: userid,
             teams: this.selections
           }
         }).then(data => {
           console.log("Selections submitted")
           console.log(data)
+          this.$emit('selectionsSubmitted')
+          this.$router.push({name: "week-id", params: {id: this.week.id}})
         })
       }
     },

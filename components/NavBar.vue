@@ -3,6 +3,7 @@
     <div>
       <div style="float: right; margin-right: 30%;" v-if="userId">
         <p>
+          <span>Hello, {{this.$store.state.userId}} | </span>
           <router-link v-show="!isSubmission" :to="{name: 'submission-new'}">Submit Rankings</router-link>
           <span v-show="!isSubmission"> | </span>
           <a @click="logout" href="#">Logout</a>

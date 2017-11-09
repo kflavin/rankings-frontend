@@ -92,25 +92,38 @@
         this.displayList=false
         var selection = this.query
 
-        // Not implemented yet
-//        selection = this.teams.filter(team => {
-//          return team.name.toLowerCase().startsWith(this.query.toLowerCase())
-//        })
-//
-//        if (selection.length > 0) {
-//          selection = selection[0].name
-//        } else {
-//          selection = this.query
-//        }
-
-        // Remove the old team, if one was given.
+        // Remove the old team from the selection array, if one was given.
         if (this.persistedQuery != '') {
           this.$emit('removeteam', this.persistedQuery)
+        }
+
+        // Return exact matches, or the closest match, that hasn't already been used.
+        selection = this.teams.filter(team => {
+          var teamName = team.name.toLowerCase()
+          var query = this.query.toLowerCase()
+          var used = this.selections.includes(teamName)
+
+          if (query != '' && (teamName == query) && !used) {
+            return true
+          } else if (query != '' && teamName.startsWith(query) && !used) {
+            return true
+          } else {
+            return false
+          }
+        })
+
+        // Items are alphabetically sorted, so grab the first match as the closest.
+        if (selection.length > 0) {
+          selection = selection[0].name
+        } else {
+          selection = this.query
         }
 
         var team = this.teams.find((team) => {
           return team.name.toLowerCase() == selection.toLowerCase()
         })
+        console.log("team:")
+        console.log(team)
 
         // If the team exists, add them.
         if (team != null) {
