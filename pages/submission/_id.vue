@@ -1,6 +1,5 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
     <div>
       <h1>Week <span v-if="data.week">{{data.week.id}}</span> rankings for <span v-if="data.user">{{data.user.name}}</span></h1><br />
     </div>
@@ -24,7 +23,6 @@
   import weekOfSubmission from '@/apollo/queries/weekOfSubmission'
   import RankingItem from '@/components/RankingItem'
   import {sortByKey} from '@/utils.js'
-  import NavBar from '~/components/NavBar'
 
 //  function sortByKey(array, key) {
 //    return array.sort(function(a, b) {
@@ -41,8 +39,7 @@
 //      console.log(this.submissions)
     },
     components: {
-      RankingItem,
-      NavBar
+      RankingItem
     },
     data: function() {
       return {

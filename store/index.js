@@ -1,14 +1,19 @@
 import Vuex from 'vuex'
 
 import mutations from './mutations'
+import getters from './getters'
 
 const createStore = () => {
   return new Vuex.Store({
     state: {
       userId: 0,
-      selections: []
+      username: "",
+      selections: [],
+      user: {},
+      token: ""
     },
-    mutations
+    mutations,
+    getters
   })
 }
 

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
     <div>
       <h1>Submissions for Week <span v-if="weeks">{{weeks[0].id}}</span></h1><br/>
     </div>
@@ -28,12 +27,10 @@
 <script>
   import SubmissionsByWeek from '@/apollo/queries/submissionByWeek'
   import SubmissionItem from '@/components/SubmissionItem'
-  import NavBar from '~/components/NavBar'
 
   export default {
     components: {
-      SubmissionItem,
-      NavBar
+      SubmissionItem
     },
     created() {
       this.weekid = this.$route.params.id

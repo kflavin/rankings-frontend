@@ -30,10 +30,16 @@
 <script>
 
   import signInUser from '@/apollo/queries/auth/signInUser'
+  import { setToken } from '@/utils/auth'
+  import { mapGetters } from 'vuex'
 
   export default {
     created: function() {
+      if (this.isAuthenticated) {
+        this.$router.push({path: '/'})
+      }
     },
+    computed: mapGetters(['isAuthenticated']),
     data: function() {
       return {
         login: true,
@@ -55,9 +61,14 @@
               password: this.password
             }
           }).then((result) => {
+            const user = result.data.loginUser
             const id = result.data.loginUser.userid
             const token = result.data.loginUser.token
-            this.saveUser(id, token)
+//            this.saveUser(id, token, this.user)
+
+//            setToken(token, Date.now() + 14400000)
+            setToken(user, this.user, Date.now() + 14400000)
+
             this.$router.push({path: '/'})
           }).catch(function(error) {
             console.error(error)
@@ -66,11 +77,12 @@
         } else {
         }
       },
-      saveUser: function(id, token) {
-        localStorage.setItem("RANKINGS_USERID", id)
-        localStorage.setItem("RANKINGS_TOKEN", token)
-        this.$store.commit('setCurrentUser', id)
-      }
+//      saveUser: function(id, token, user) {
+//        localStorage.setItem("RANKINGS_USERID", id)
+//        localStorage.setItem("RANKINGS_TOKEN", token)
+//        this.$store.commit('setCurrentUserId', id)
+//        this.$store.commit('setCurrentUser', user)
+//      }
     }
   }
 </script>

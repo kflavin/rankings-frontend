@@ -1,7 +1,5 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
-
     <div>
       <h1>Per Week Rankings</h1><br/>
     </div>
@@ -20,18 +18,17 @@
 <script>
 import Logo from '~/components/Logo'
 import WeekItem from '~/components/WeekItem'
-import NavBar from '~/components/NavBar'
 
 //import { ALL_WEEKS_QUERY } from '@/assets/graphql.js'
 //import allWeeks from '~/apollo/queries/allWeeks.gql'
 import weeks from '~/apollo/queries/allWeeksSimple.gql'
-
+import { mapGetters } from 'vuex'
 
 export default {
+  computed: mapGetters(['isAuthenticated']),
   components: {
     WeekItem,
-    Logo,
-    NavBar
+    Logo
   },
   methods: {
     runit: function() {

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <nav-bar></nav-bar>
     <div>
       <h1>New Submission for week <span v-if="week">{{ week.date}}</span></h1>
     </div>
@@ -31,12 +30,10 @@
   import currentWeek from '@/apollo/queries/currentWeek'
   import submitUserRankings from '@/apollo/queries/mutations/submitUserRankings'
   import SubmitItem from '@/components/SubmitItem'
-  import NavBar from '~/components/NavBar'
 
   export default {
     components: {
-      SubmitItem,
-      NavBar
+      SubmitItem
     },
     created: function() {
       console.log("userid:")

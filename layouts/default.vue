@@ -1,8 +1,22 @@
 <template>
-  <div>
-    <nuxt/>
+  <div class="app">
+    <div class="main">
+      <nav-bar></nav-bar>
+      <nuxt/>
+    </div>
   </div>
 </template>
+
+<script>
+  import NavBar from '@/components/NavBar'
+
+  export default {
+    components: {
+      NavBar
+    }
+  }
+
+</script>
 
 <style>
 html {

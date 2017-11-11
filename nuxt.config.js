@@ -43,6 +43,9 @@ module.exports = {
     networkInterfaces: {
       default: '~/apollo/network-interfaces/default.js'
     }
+  },
+  router: {
+    middleware: 'check-auth'
   }
 
 }

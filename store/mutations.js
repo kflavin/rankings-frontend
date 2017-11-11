@@ -1,10 +1,35 @@
-const mutations = {
-  setCurrentUser: function(state, userId) {
+
+
+export const mutations = {
+
+  setCurrentUserName: function(state, username) {
+    state.username = username;
+  },
+  clearCurrentUserName: function(state, username) {
+    state.username = "";
+  },
+
+  setCurrentUserId: function(state, userId) {
     state.userId = userId;
   },
-  clearCurrentUser: function(state) {
+  clearCurrentUserId: function(state) {
     state.userId = 0;
   },
+
+  setCurrentUser: function(state, user) {
+    state.user = user;
+  },
+  clearCurrentUser: function(state, user) {
+    state.user = {}
+  },
+
+  setToken: function(state, token) {
+    state.user = token;
+  },
+  clearToken: function(state) {
+    state.token = ""
+  },
+
 
   setTeams: function(state, teams) {
     state.teams = teams;

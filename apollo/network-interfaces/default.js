@@ -1,21 +1,60 @@
-import { createNetworkInterface } from 'apollo-client'
+// import { createNetworkInterface } from 'apollo-client'
+//
+// export default (ctx) => {
+//   const networkInterface = createNetworkInterface({
+//     uri: 'http://127.0.0.1:5000/simple'
+//     // uri: 'http://127.0.0.1:5000/graphql'
+//   })
+//
+//   console.log("your context")
+//   console.log(ctx)
+//
+//   // here you can place your middleware. ctx has the context forwarded from Nuxt
+//
+//   // you can return the networkInterface directly or return an object with additional
+//   // apollo-client options
+//   // return networkInterface
+//
+//   // alternative return a object with constructor options of apollo-client
+//   // return {
+//   //   networkInterface,
+//   //   dataIdFromObject: o => o.id
+//   // }
+//   return networkInterface
+// }
+
+
+import ApolloClient, { createNetworkInterface } from 'apollo-client';
+import { getToken } from '@/utils/auth'
+
+
 
 export default (ctx) => {
-  const networkInterface = createNetworkInterface({
-    uri: 'http://127.0.0.1:5000/simple'
-    // uri: 'http://127.0.0.1:5000/graphql'
-  })
 
-  // here you can place your middleware. ctx has the context forwarded from Nuxt
+  const networkInterface = createNetworkInterface({ uri: 'http://127.0.0.1:5000/simple' });
 
-  // you can return the networkInterface directly or return an object with additional
-  // apollo-client options
-  // return networkInterface
+  if (ctx.isServer) {
+    console.log("this is the server!")
+    console.log(ctx.req.headers)
+  } else {
+    console.log("this is the client!")
+    console.log(ctx.req)
+  }
 
-  // alternative return a object with constructor options of apollo-client
-  // return {
-  //   networkInterface,
-  //   dataIdFromObject: o => o.id
-  // }
+  networkInterface.use([{
+    applyMiddleware(req, next) {
+      if (!req.options.headers) {
+        req.options.headers = {};  // Create the header object if needed.
+      }
+      console.log("applyMiddleware: ")
+      // var token = getToken()
+
+      // req.options.headers['Authorization'] = 'Bearer ' +
+
+      // req.options.headers['authorization'] = localStorage.getItem('token') ? localStorage.getItem('token') : null;
+      next();
+    }
+  }]);
+
   return networkInterface
 }
