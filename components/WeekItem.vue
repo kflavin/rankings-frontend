@@ -1,5 +1,5 @@
 <template>
-  <div>Week {{week.id}}: <router-link :to="`week/${week.id}`">{{week.date}}</router-link></div>
+  <div>Week {{week.id}}: <nuxt-link :to="`week/${week.id}`">{{week.date}}</nuxt-link></div>
 </template>
 
 <script>

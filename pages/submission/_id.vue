@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h1>Week <span v-if="data.week">{{data.week.id}}</span> rankings for <span v-if="data.user">{{data.user.name}}</span></h1><br />
+      <h1>Week {{weekid}} rankings for {{username}}</h1><br />
     </div>
     <div>
       <ranking-item
@@ -13,7 +13,7 @@
 
     <div>
       <br />
-      <router-link :to="`/week/${data.week.id}`">Return to week <span v-if="data.week">{{data.week.id}}</span> listings</router-link>
+      <nuxt-link :to="`/week/${this.weekid}`">Return to week {{weekid}} listings</nuxt-link>
     </div>
   </div>
 </template>
@@ -43,8 +43,16 @@
     },
     data: function() {
       return {
-        'rankings': [],
-        'data': {}
+        'rankings': null,
+        'submission': null
+      }
+    },
+    computed: {
+      weekid() {
+        return this.submission ? this.submission.week.id : null
+      },
+      username() {
+        return this.submission ? this.submission.user.name : null
       }
     },
     apollo: {
@@ -60,7 +68,7 @@
           }
         }
       },
-      data: {
+      submission: {
         update: function(data) {
           return data.submissions[0]
         },

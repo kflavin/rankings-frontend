@@ -1,14 +1,14 @@
 <template>
   <div>
     <div>
-      <h1>Submissions for Week <span v-if="weeks">{{weeks[0].id}}</span></h1><br/>
+      <h1>Submissions for Week {{weekid}}</h1><br/>
     </div>
 
     <div>
 
       <div >
       <submission-item
-      v-for="submission in weeks[0].submissions"
+      v-for="submission in submissions"
       :key="submission.id"
       :submission="submission">
       </submission-item>
@@ -16,7 +16,7 @@
 
       <div>
         <br/>
-        <router-link to="/">Weeks Index</router-link>
+        <nuxt-link to="/">Weeks Index</nuxt-link>
       </div>
 
     </div>
@@ -32,8 +32,23 @@
     components: {
       SubmissionItem
     },
+    computed: {
+      weekid() {
+        return this.$route.params.id
+      },
+      submissions() {
+        if (this.week) {
+          return this.week.submissions
+        } else {
+          return null
+        }
+      }
+    },
     created() {
-      this.weekid = this.$route.params.id
+      console.log("Browser")
+      console.log(process.browser)
+      console.log(this.$route)
+//      this.weekid = this.$route.params.id
 //      console.log("Your weeks---")
 //      console.log(this.$route.params)
 //      console.log(this.weeks)
@@ -52,20 +67,14 @@
 //            console.error(error)
 //          }
 //      })
-
-
-
-
-
     },
     data: function() {
       return {
-        weekid: 1,
-        weeks: []
+        week: null
       }
     },
     apollo: {
-      weeks: {
+      week: {
         query: SubmissionsByWeek,
         variables: function() {
           return {
@@ -74,6 +83,9 @@
         },
         error(error) {
           console.error(error)
+        },
+        update(data) {
+          return data.weeks[0]
         },
         fetchPolicy: 'network-only'
       }

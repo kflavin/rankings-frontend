@@ -1,8 +1,11 @@
 <template>
   <div>
+    hello?
     <div>
       <h1>New Submission for week <span v-if="week">{{ week.date}}</span></h1>
     </div>
+
+    <div>Your submission: {{submission}}</div>
     <div>
       <submit-item
       v-for="rank in this.positions"
@@ -20,7 +23,7 @@
 
     <div>
       <br/>
-      <router-link to="/">Weeks Index</router-link>
+      <nuxt-link to="/">Weeks Index</nuxt-link>
     </div>
   </div>
 </template>
@@ -28,6 +31,7 @@
 <script>
   import allTeams from '@/apollo/queries/allTeams'
   import currentWeek from '@/apollo/queries/currentWeek'
+  import mySubmission from '@/apollo/queries/mySubmission'
   import submitUserRankings from '@/apollo/queries/mutations/submitUserRankings'
   import SubmitItem from '@/components/SubmitItem'
 
@@ -94,7 +98,8 @@
     data: function() {
       return {
         teams: [],
-        selections: []
+        selections: [],
+        submission: null
       }
     },
     apollo: {
@@ -108,6 +113,12 @@
         query: currentWeek,
         update: function(data) {
           return data.currentWeek
+        }
+      },
+      submission: {
+        query: mySubmission,
+        update: function(data) {
+          return data.mySubmission
         }
       }
     }

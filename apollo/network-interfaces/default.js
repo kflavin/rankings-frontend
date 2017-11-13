@@ -47,11 +47,21 @@ export default (ctx) => {
         req.options.headers = {};  // Create the header object if needed.
       }
       console.log("applyMiddleware: ")
-      // var token = getToken()
 
-      // req.options.headers['Authorization'] = 'Bearer ' +
+      if (ctx.isClient) {
+        var token = localStorage.getItem('authToken');
+        console.log("token retrieved from the localstorage")
+        console.log(token)
+        // var token = getToken()
+        req.options.headers['Authorization'] = 'Bearer ' + token
+        // req.options.headers['authorization'] = localStorage.getItem('token') ? localStorage.getItem('token') : null;
+      } else {
+        console.log("retrieving the token from the server")
+        console.log(req.options.headers)
+      }
 
-      // req.options.headers['authorization'] = localStorage.getItem('token') ? localStorage.getItem('token') : null;
+
+
       next();
     }
   }]);
