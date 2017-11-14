@@ -31,33 +31,35 @@ import { getToken } from '@/utils/auth'
 
 export default (ctx) => {
 
-  const networkInterface = createNetworkInterface({ uri: 'http://127.0.0.1:5000/simple' });
-
-  if (ctx.isServer) {
-    console.log("this is the server!")
-    console.log(ctx.req.headers)
+  var endpoint = ""
+  if (process.env.NODE_ENV == "production") {
+    endpoint = "https://rankings-backend.herokuapp.com/simple"
   } else {
-    console.log("this is the client!")
-    console.log(ctx.req)
+    endpoint = "http://127.0.0.1:5000/simple"
   }
+
+  const networkInterface = createNetworkInterface({ uri: endpoint });
+
+  // if (ctx.isServer) {
+  //   console.log("this is the server!")
+  //   console.log(ctx.req.headers)
+  // } else {
+  //   console.log("this is the client!")
+  //   console.log(ctx.req)
+  // }
 
   networkInterface.use([{
     applyMiddleware(req, next) {
       if (!req.options.headers) {
         req.options.headers = {};  // Create the header object if needed.
       }
-      console.log("applyMiddleware: ")
 
       if (ctx.isClient) {
         var token = localStorage.getItem('authToken');
-        console.log("token retrieved from the localstorage")
-        console.log(token)
         // var token = getToken()
         req.options.headers['Authorization'] = 'Bearer ' + token
         // req.options.headers['authorization'] = localStorage.getItem('token') ? localStorage.getItem('token') : null;
       } else {
-        console.log("retrieving the token from the server")
-        console.log(req.options.headers)
       }
 
 

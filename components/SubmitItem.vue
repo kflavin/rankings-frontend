@@ -67,14 +67,12 @@
     },
     created: function() {
       this.$emit('initSelections')
-      console.log("Selections empty: " + this.selections)
     },
     methods: {
       reset () {
         this.query = ''
       },
       onClick(selection, e) {
-        console.log("onClick")
         this.displayList = false
         this.query = selection.toLowerCase()
         this.persistedQuery = selection
@@ -85,10 +83,8 @@
           this.$emit('addteam', selection)
           this.query = selection
         }
-        console.log(this.selections)
       },
       onBlur(e) {
-        console.log("onBlur")
         this.displayList=false
         var selection = this.query
 
@@ -122,8 +118,6 @@
         var team = this.teams.find((team) => {
           return team.name.toLowerCase() == selection.toLowerCase()
         })
-        console.log("team:")
-        console.log(team)
 
         // If the team exists, add them.
         if (team != null) {
@@ -132,7 +126,6 @@
         } else {
           this.persistedQuery = ''
         }
-        console.log(this.selections)
       }
     }
   }

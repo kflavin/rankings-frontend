@@ -10,7 +10,6 @@
         </p>
       </div>
       <div style="float: right; margin-right: 30%;" v-else><router-link :to="{name: 'auth-login'}">Log In</router-link></div>
-Is authenticated?: {{ isAuthenticated }}
     </div>
   </div>
 </template>
@@ -23,12 +22,9 @@ Is authenticated?: {{ isAuthenticated }}
   export default {
     name: 'NavBar',
     created: function() {
-      console.log("navbar")
-      console.log(this.$store.state.userId)
 
     },
     mounted: function() {
-      console.log("navbar mounted")
     },
 //    computed: mapGetters({isAuthenticated: 'isAuthenticated'}),
 
@@ -43,8 +39,6 @@ Is authenticated?: {{ isAuthenticated }}
     },
     methods: {
       logout: function() {
-        console.log("log out")
-        console.log(this.$store)
         destroyToken(this.$store)
         this.$router.push({name: 'auth-login', query: {message: 'You have been logged out.'}})
       }

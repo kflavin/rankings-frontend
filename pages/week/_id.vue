@@ -45,9 +45,6 @@
       }
     },
     created() {
-      console.log("Browser")
-      console.log(process.browser)
-      console.log(this.$route)
 //      this.weekid = this.$route.params.id
 //      console.log("Your weeks---")
 //      console.log(this.$route.params)

@@ -1,10 +1,8 @@
 import { getUserNameFromLocalStorage, getUserIdFromLocalStorage } from '~/utils/auth'
 
 export default function ({ isServer, store, req }) {
-  console.log("here's our check-auth middleware")
 
   if (!isServer) {
-    console.log("we're on the client!")
     const username = getUserNameFromLocalStorage()
     const userid = getUserIdFromLocalStorage()
 

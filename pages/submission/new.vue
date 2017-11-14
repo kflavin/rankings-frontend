@@ -1,12 +1,11 @@
 <template>
   <div>
-    hello?
     <div>
       <h1>New Submission for week <span v-if="week">{{ week.date}}</span></h1>
     </div>
 
-    <div>Your submission: {{submission}}</div>
-    <div>
+    <div v-if="submission"><nuxt-link :to="`/submission/${this.submission.id}`">Your submission is in!</nuxt-link></div>
+    <div v-else>
       <submit-item
       v-for="rank in this.positions"
       :rank="rank"
@@ -40,8 +39,6 @@
       SubmitItem
     },
     created: function() {
-      console.log("userid:")
-      console.log(this.$store.state.userId)
     },
     middleware: 'auth',
     methods: {
@@ -61,7 +58,6 @@
       },
       submit() {
 
-        console.log("user id is: " + this.$store.state.userId)
         var userid = this.$store.state.userId
 
         if (this.selections.length !== this.positions) {
@@ -78,8 +74,6 @@
             teams: this.selections
           }
         }).then(data => {
-          console.log("Selections submitted")
-          console.log(data)
           this.$emit('selectionsSubmitted')
           this.$router.push({name: "week-id", params: {id: this.week.id}})
         })

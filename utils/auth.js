@@ -67,8 +67,6 @@ var getTokenFromCookie = function(req) {
   const authToken = req.headers.cookie.split(';').find(c => c.trim().startsWith('authToken='))
   if (!authToken) return
   const jwt = autToken.split('=')[1]
-  console.log("cookie: ")
-  console.log(jwt)
   return jwtDecode(jwt)
 }
 
