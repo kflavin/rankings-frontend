@@ -83,6 +83,7 @@
           this.$emit('addteam', selection)
           this.query = selection
         }
+        console.log(this.selections)
       },
       onBlur(e) {
         this.displayList=false
@@ -126,6 +127,7 @@
         } else {
           this.persistedQuery = ''
         }
+        console.log(this.selections)
       }
     }
   }
