@@ -28,6 +28,7 @@
 </template>
 
 <script>
+  import { destroyToken } from '@/utils/auth'
   import allTeams from '@/apollo/queries/allTeams'
   import currentWeek from '@/apollo/queries/currentWeek'
   import mySubmission from '@/apollo/queries/mySubmission'
@@ -111,7 +112,18 @@
       },
       submission: {
         query: mySubmission,
+        error: (error) => {
+          this.submission = null
+          if (error.message.toLowerCase() == "GraphQL error: Not logged in".toLowerCase()) {
+            console.log("logging you out")
+            this.submission = null
+            destroyToken(this.$store)
+          }
+        },
+        errorPolicy: "all",
         update: function(data) {
+          console.log("calling update")
+          console.log(data.mySubmission)
           return data.mySubmission
         }
       }

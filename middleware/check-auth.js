@@ -8,6 +8,7 @@ export default function ({ isServer, store, req }) {
 
     store.commit('setCurrentUserId', userid)
     store.commit('setCurrentUserName', username)
+
   }
 
   // If nuxt generate, pass this middleware
