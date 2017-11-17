@@ -1,5 +1,9 @@
 <template>
-  <div>Week {{week.id}}: <nuxt-link :to="`week/${week.id}`">{{week.date}}</nuxt-link></div>
+  <div>
+    Week {{week.id}}: <nuxt-link :to="`week/${week.id}`">{{week.date}} Submissions</nuxt-link>
+    -
+    <nuxt-link :to="`week/${week.id}/ranking`" :week="week">Rankings</nuxt-link>
+  </div>
 </template>
 
 <script>
