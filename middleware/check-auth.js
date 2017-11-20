@@ -3,6 +3,7 @@ import { getUserNameFromLocalStorage, getUserIdFromLocalStorage } from '~/utils/
 export default function ({ isServer, store, req }) {
 
   if (!isServer) {
+    console.log("setting store...")
     const username = getUserNameFromLocalStorage()
     const userid = getUserIdFromLocalStorage()
 
