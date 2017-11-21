@@ -2,9 +2,21 @@
   <div>
     <h1>Rankings for week: {{weekid}}</h1>
 
-    <p>
-      here
-    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Team</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="ranking in rankings">
+          <td>{{ranking[0]}}</td>
+          <td>{{ranking[1]}}</td>
+        </tr>
+      </tbody>
+    </table>
+
 
     <p><nuxt-link :to="`/`">Return to week's index</nuxt-link></p>
   </div>
@@ -15,12 +27,12 @@
 
   export default {
     created() {
-      console.log("week created")
-      console.log(this.week)
-      console.log(this.$route.params.id)
+      console.log("route param " + this.$route.params.id)
+      console.log("computed " + this.weekid)
     },
     computed: {
       weekid() {
+        console.log("week id is " + this.$route.params.id)
         return this.$route.params.id
       }
     },
@@ -36,11 +48,23 @@
       rankings: {
         query: weekRanking,
         update: function(data) {
+          var d = JSON.parse(data.weekRanking.rankings)
+
+
+
           console.log("rankings")
           console.log(data.weekRanking.rankings)
           console.log(JSON.parse(data.weekRanking.rankings))
-          return data.weekRanking
-        }
+          console.log(d[1])
+          return JSON.parse(data.weekRanking.rankings)
+        },
+        variables() {
+          console.log("here we are in variables! " + this.weekid)
+          return {
+            weekid: this.weekid
+          }
+        },
+        fetchPolicy: 'network-only'
       }
     }
 
