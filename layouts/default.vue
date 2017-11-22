@@ -1,8 +1,20 @@
 <template>
   <div class="app">
     <div class="main">
-      <nav-bar></nav-bar>
-      <nuxt/>
+      <div>
+        <div class="columns">
+          <div class="column is-2"></div>
+          <div class="column is-8">
+            <div>
+              <nav-bar></nav-bar>
+            </div>
+            <div class="content">
+              <nuxt/>
+            </div>
+          </div>
+          <div class="column is-2"></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

@@ -1,14 +1,29 @@
 <template>
   <div>
-    <div style="float: left; padding-right: 7px;">{{rank}}: <input type="text" ref="input" v-model="query"
-                                                                   @click="displayList=true"
-                                                                   @keyup="displayList=true"
-                                                                   @blur="onBlur($event)"></div>
+    <div class="field is-horizontal">
+      <div class="field-label is-large">
+        <label class="label is-large">{{rank}}</label>
+      </div>
+
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" ref="input" v-model="query"
+                 @click="displayList=true"
+                 @keyup="displayList=true"
+                 @blur="onBlur($event)">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div style="color: red;" ref="message">{{message}}</div>
     <div style="clear: both"></div>
     <div>
 
-      <div v-show="displayList">
+      <div v-show="displayList"></div>
+
+      <div v-show="true">
         <transition-group name="fade" tag="ul" class="Results">
           <li v-for="item in filtered" :key="item.name" @mousedown.stop.prevent="onClick(item.name, $event)">
             <span>{{item.name}}</span>
@@ -136,9 +151,11 @@
 
 <style>
 .Results {
-  position: absolute;
+  /*position: absolute;*/
+  position: relative;
   background-color: white;
   cursor: pointer;
+  color: red;
 }
   .overlay {
     position: fixed; /* Sit on top of the page content */

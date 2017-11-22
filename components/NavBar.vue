@@ -1,17 +1,24 @@
 <template>
-  <div>
-    <div>
-      <div style="float: right; margin-right: 30%;" v-if="userId">
-        <p>
-          <span>Hello, {{this.$store.state.username}} | </span>
-          <router-link v-show="!isSubmission" :to="{name: 'submission-new'}">Submit Rankings</router-link>
-          <span v-show="!isSubmission"> | </span>
-          <a @click="logout" href="#">Logout</a>
-        </p>
+    <nav class="navbar-menu">
+
+      <div class="navbar-start">
       </div>
-      <div style="float: right; margin-right: 30%;" v-else><router-link :to="{name: 'auth-login'}">Log In</router-link></div>
-    </div>
-  </div>
+      <div class="navbar-end">
+        <div v-if="userId">
+          <p>
+            <span>Hello, {{this.$store.state.username}} | </span>
+            <router-link v-show="!isSubmission" :to="{name: 'submission-new'}">Submit Rankings</router-link>
+            <span v-show="!isSubmission"> | </span>
+            <a @click="logout" href="#">Logout</a>
+          </p>
+        </div>
+
+        <div v-else>
+          <router-link :to="{name: 'auth-login'}">Log In</router-link>
+        </div>
+      </div>
+
+    </nav>
 </template>
 
 

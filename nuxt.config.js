@@ -10,7 +10,8 @@ module.exports = {
       { hid: 'description', name: 'description', content: 'Rankings front end' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css' }
     ]
   },
   /*
@@ -38,7 +39,10 @@ module.exports = {
   /*
   ** Modules
    */
-  modules: ['@nuxtjs/apollo'],
+  modules: [
+    '@nuxtjs/apollo',
+    '@nuxtjs/bulma'
+  ],
   apollo: {
     networkInterfaces: {
       default: '~/apollo/network-interfaces/default.js'
@@ -46,6 +50,9 @@ module.exports = {
   },
   router: {
     middleware: 'check-auth'
-  }
+  },
+  css: [
+    '@/assets/styles.css'
+  ]
 
 }
