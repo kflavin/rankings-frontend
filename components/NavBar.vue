@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar-menu">
+    <nav class="navbar-menu is-active">
 
       <div class="navbar-start">
       </div>
