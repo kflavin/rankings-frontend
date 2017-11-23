@@ -128,7 +128,12 @@
             console.log(result)
             this.$router.push({name: 'auth-login', query: {message: "Please login!"}})
           }).catch(function(error) {
-            this.message = "Error registering.  Please try again later."
+            console.log(error.message)
+            if(error.message == "GraphQL error: User already exists.") {
+              this.message = "User already exists."
+            } else {
+              this.message = "Error registering.  Please try again later."
+            }
             this.error = true
           }.bind(this))
         }
