@@ -1,31 +1,70 @@
 <template>
   <div>
-    <div><h1>{{login ? "Login" : "Register"}}</h1></div>
-    <div>
-      <div v-show="message" class="message">
-        {{message}}
+    <div class="columns">
+      <div class="column">
+
       </div>
-      <div v-if="!login">
-        <label for="email">Email</label><input id="email" type="text" placeholder="email" v-model="email">
+      <div class="column">
+        <div>
+          <h1>{{login ? "Login" : "Register"}}</h1>
+        </div>
+        <div v-show="message" class="message">
+          {{message}}
+        </div>
+
+        <div class="field" v-if="!login">
+          <p class="control has-icons-left has-icons-right">
+            <input class="input" type="email" placeholder="Email" v-model="email">
+            <span class="icon is-small is-left">
+              <i class="fa fa-envelope"></i>
+            </span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control has-icons-left has-icons-right">
+            <input class="input" type="user" placeholder="User" v-model="user">
+            <span class="icon is-small is-left">
+              <i class="fa fa-user"></i>
+            </span>
+          </p>
+        </div>
+        <div class="field">
+          <p class="control has-icons-left">
+            <input class="input" type="password" placeholder="Password" v-model="password">
+            <span class="icon is-small is-left">
+              <i class="fa fa-lock"></i>
+            </span>
+          </p>
+        </div>
+
+        <div class="field is-grouped is-grouped-centered">
+          <p class="control">
+            <button class="button is-success" id="login" @click="confirm()">
+              {{login ? 'Login' : 'Register'}}
+            </button>
+          </p>
+          <p class="control">
+            <button class="button  is-outlined" id="toggle" @click="login=!login">
+              {{login ? 'Register for an account':'Login with your Account'}}
+            </button>
+          </p>
+        </div>
+
+        <div class="field is-grouped is-grouped-centered">
+          <br/>
+          <router-link to="/">Weekly Rankings Home</router-link>
+        </div>
       </div>
-      <div>
-        <label for="user">User</label><input id="user" type="text" placeholder="username" v-model="user">
-      </div>
-      <div>
-        <label for="password">Password</label><input id="password" type="password" placeholder="password" v-model="password">
+
+      <div class="column">
+
       </div>
     </div>
 
-    <div>
-      <input id="login" type="button" :value="login ? 'Login' : 'Register'" @click="confirm()">
-      <input id="toggle" type="button" :value="login ? 'Register for an account':'Login with your Account'" @click="login=!login">
-    </div>
-    <div>
-      <br/>
-      <router-link to="/">Weeks Index</router-link>
-    </div>
   </div>
 </template>
+
+
 
 <script>
 

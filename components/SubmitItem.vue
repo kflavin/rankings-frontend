@@ -1,21 +1,28 @@
 <template>
   <div>
-    <div style="float: left; padding-right: 7px;">{{rank}}: <input type="text" ref="input" v-model="query"
-                                                                   @click="displayList=true"
-                                                                   @keyup="displayList=true"
-                                                                   @blur="onBlur($event)"></div>
-    <div style="color: red;" ref="message">{{message}}</div>
-    <div style="clear: both"></div>
-    <div>
-
-      <div v-show="displayList">
-        <transition-group name="fade" tag="ul" class="Results">
-          <li v-for="item in filtered" :key="item.name" @mousedown.stop.prevent="onClick(item.name, $event)">
-            <span>{{item.name}}</span>
-          </li>
-        </transition-group>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">{{rank}}</label>
       </div>
 
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input class="input is-normal" type="text" ref="input" v-model="query"
+                 @click="displayList=true"
+                 @keyup="displayList=true"
+                 @blur="onBlur($event)">
+
+            <div v-show="displayList && !queryEmpty">
+              <transition-group name="fade" tag="ul" class="Results">
+                <li v-for="item in filtered" :key="item.name" @mousedown.stop.prevent="onClick(item.name, $event)">
+                  <span>{{item.name}}</span>
+                </li>
+              </transition-group>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -41,6 +48,15 @@
       }
     },
     computed: {
+      queryEmpty() {
+
+//        return typeof this.filtered !== 'undefined' && this.filtered.length < 1
+        if (typeof this.filtered !== 'undefined') {
+          return this.filtered.length < 1
+        } else {
+          return true
+        }
+      },
       filtered() {
         if (this.query.length >= this.startAt) {
           var teams = this.teams.filter(team => {
@@ -73,6 +89,7 @@
         this.query = ''
       },
       onClick(selection, e) {
+        console.log("click")
         this.displayList = false
         this.query = selection.toLowerCase()
         this.persistedQuery = selection
@@ -86,6 +103,7 @@
         console.log(this.selections)
       },
       onBlur(e) {
+        console.log("blur")
         this.displayList=false
         var selection = this.query
 
@@ -139,6 +157,17 @@
   position: absolute;
   background-color: white;
   cursor: pointer;
+  z-index: 2;
+  margin-left: 20px;
+  margin-right: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  list-style-type: none;
+  left: -25px;
+  background-color: rgba(255, 255, 255, 1.0);
+  border: 1px solid black;
+  box-shadow: 10px 10px 5px #888888;
+
 }
   .overlay {
     position: fixed; /* Sit on top of the page content */

@@ -1,8 +1,11 @@
 <template>
   <div>
-    <div>
-      <h1>New Submission for week <span v-if="week">{{ week.date}}</span></h1>
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column"><h1>Week <span v-if="week">{{ week.id}} Submission</span></h1></div>
+      <div class="column"></div>
     </div>
+
 
     <div v-if="submission"><nuxt-link :to="`/submission/${this.submission.id}`">Your submission is in!</nuxt-link></div>
     <div v-else>
@@ -16,14 +19,23 @@
       v-on:addteam="addTeam"
       v-on:removeteam="removeTeam">
       </submit-item>
-      <button @click="submit">Submit</button>
-      <button @click="reset">Reset</button>
+      <br />
+      <div class="field is-grouped is-grouped-centered">
+        <p class="control">
+          <button class="button is-primary" @click="submit">Submit</button>
+        </p>
+        <p class="control">
+          <button class="button is-light" @click="reset">Reset</button>
+        </p>
+      </div>
+      <div class="field is-grouped is-grouped-centered">
+        <div>
+          <nuxt-link to="/">Weeks Index</nuxt-link>
+        </div>
+      </div>
+
     </div>
 
-    <div>
-      <br/>
-      <nuxt-link to="/">Weeks Index</nuxt-link>
-    </div>
   </div>
 </template>
 
@@ -118,6 +130,8 @@
             console.log("logging you out")
             this.submission = null
             destroyToken(this.$store)
+          } else if (error.message.toLowerCase() == "could not find submission for user") {
+            console.log("No current submission for this user")
           }
         },
         errorPolicy: "all",

@@ -1,15 +1,25 @@
 <template>
   <div>
     <div>
-      <h1>Per Week Rankings</h1><br/>
+      <h1>Weekly Rankings</h1><br/>
     </div>
 
     <div>
-      <week-item
-      v-for="week in weeks"
-      :key="week.id"
-      :week="week">
-      </week-item>
+      <table>
+        <thead>
+          <th>Week</th>
+          <th>User Submissions</th>
+          <th>Rankings</th>
+        </thead>
+        <tbody>
+          <tr
+          v-for="week in weeks"
+          :key="week.id"
+          :week="week"
+          is="week-item">
+          </tr>
+        </tbody>
+      </table>
     </div>
 
   </div>
