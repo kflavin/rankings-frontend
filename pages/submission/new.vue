@@ -15,6 +15,8 @@
       :key="rank"
       :teams="teams"
       :selections="selections"
+      :resetField="resetField"
+      v-on:resetOff="resetOff"
       v-on:initSelections="initSelections"
       v-on:addteam="addTeam"
       v-on:removeteam="removeTeam">
@@ -25,7 +27,7 @@
           <button class="button is-primary" @click="submit">Submit</button>
         </p>
         <p class="control">
-          <button class="button is-light" @click="reset">Reset</button>
+          <button class="button is-light" @click="reset()">Reset</button>
         </p>
       </div>
       <div class="field is-grouped is-grouped-centered">
@@ -53,6 +55,16 @@
     },
     created: function() {
     },
+    watch: {
+      resetCounter(c) {
+//        console.log("counter is " + c)
+        if (c > 9) {
+//          console.log("set to off")
+          this.resetField = false
+          this.resetCounter = 0
+        }
+      }
+    },
     middleware: 'auth',
     methods: {
       addTeam(team) {
@@ -67,7 +79,10 @@
         this.selections = []
       },
       reset() {
-        this.query = ''
+        this.resetField = true
+      },
+      resetOff() {
+        this.resetCounter++
       },
       submit() {
 
@@ -106,7 +121,9 @@
       return {
         teams: [],
         selections: [],
-        submission: null
+        submission: null,
+        resetField: false,
+        resetCounter: 0
       }
     },
     apollo: {

@@ -30,6 +30,10 @@
 <script>
   export default {
     props: {
+      resetField: {
+        type: Boolean,
+        default: false
+      },
       rank: {
         type: Number,
         required: true
@@ -45,6 +49,14 @@
       selections: {
         type: Array,
         default: []
+      }
+    },
+    watch: {
+      resetField(val) {
+        if (val) {
+          this.query = ''
+          this.$emit('resetOff')
+        }
       }
     },
     computed: {
@@ -85,9 +97,6 @@
       this.$emit('initSelections')
     },
     methods: {
-      reset () {
-        this.query = ''
-      },
       onClick(selection, e) {
         console.log("click")
         this.displayList = false

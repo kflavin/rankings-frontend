@@ -29,7 +29,7 @@
   export default {
     name: 'NavBar',
     created: function() {
-
+      console.log("navbar created")
     },
     mounted: function() {
     },

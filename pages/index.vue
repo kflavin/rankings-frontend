@@ -7,9 +7,11 @@
     <div>
       <table>
         <thead>
-          <th>Week</th>
-          <th>User Submissions</th>
-          <th>Rankings</th>
+          <tr>
+            <th>Week</th>
+            <th>User Submissions</th>
+            <th>Rankings</th>
+          </tr>
         </thead>
         <tbody>
           <tr
