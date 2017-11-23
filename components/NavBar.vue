@@ -25,11 +25,24 @@
 <script>
   import { mapGetters } from 'vuex'
   import { destroyToken } from '@/utils/auth'
+  import { getUserNameFromLocalStorage, getUserIdFromLocalStorage } from '~/utils/auth'
 
   export default {
     name: 'NavBar',
-    created: function() {
-      console.log("navbar created")
+    created: function(d) {
+      console.log(d)
+      console.log("navbar created, set user if logged in")
+
+//      if (!isServer) {
+//        const username = getUserNameFromLocalStorage()
+//        const userid = getUserIdFromLocalStorage()
+//
+//        if (userid != null) {
+//          console.log("We have a user!")
+//          store.commit('setCurrentUserId', userid)
+//          store.commit('setCurrentUserName', username)
+//        }
+//      }
     },
     mounted: function() {
     },

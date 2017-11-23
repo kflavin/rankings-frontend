@@ -69,6 +69,7 @@
 <script>
 
   import signInUser from '@/apollo/queries/auth/signInUser'
+  import createUser from '@/apollo/queries/auth/createUser'
   import { setToken } from '@/utils/auth'
   import { mapGetters } from 'vuex'
 
@@ -115,6 +116,21 @@
             this.error = true
           }.bind(this))
         } else {
+          this.$apollo.mutate({
+            mutation: createUser,
+            variables: {
+              name: this.user,
+              password: this.password,
+              active: true
+            }
+          }).then((result) => {
+            console.log("created user")
+            console.log(result)
+            this.$router.push({name: 'auth-login', query: {message: "Please login!"}})
+          }).catch(function(error) {
+            this.message = "Error registering.  Please try again later."
+            this.error = true
+          }.bind(this))
         }
       },
 //      saveUser: function(id, token, user) {

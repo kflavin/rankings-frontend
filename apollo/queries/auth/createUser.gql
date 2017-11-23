@@ -1,0 +1,13 @@
+mutation CreateUser($name: String!, $password: String!, $active: Boolean!) {
+  createUser(
+    name: $name,
+    password: $password,
+    active: $active
+  ) {
+    user {
+      id
+      active
+      name
+    }
+  }
+}
