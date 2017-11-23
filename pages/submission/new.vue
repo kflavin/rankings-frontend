@@ -27,7 +27,7 @@
           <button class="button is-primary" @click="submit">Submit</button>
         </p>
         <p class="control">
-          <button class="button is-light" @click="reset()">Reset</button>
+          <button class="button is-primary is-outlined" @click="reset()">Reset</button>
         </p>
       </div>
       <div class="field is-grouped is-grouped-centered">

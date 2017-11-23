@@ -44,7 +44,7 @@
             </button>
           </p>
           <p class="control">
-            <button class="button  is-outlined" id="toggle" @click="login=!login">
+            <button class="button is-success is-outlined" id="toggle" @click="login=!login">
               {{login ? 'Register for an account':'Login with your Account'}}
             </button>
           </p>
