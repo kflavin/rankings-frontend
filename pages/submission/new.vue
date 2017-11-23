@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div>
-      <h1>Week <span v-if="week">{{ week.id}} Submission</span></h1>
+    <div class="columns">
+      <div class="column"></div>
+      <div class="column"><h1>Week <span v-if="week">{{ week.id}} Submission</span></h1></div>
+      <div class="column"></div>
     </div>
 
 
@@ -17,9 +19,7 @@
       v-on:addteam="addTeam"
       v-on:removeteam="removeTeam">
       </submit-item>
-      <button @click="submit">Submit</button>
-      <button @click="reset">Reset</button>
-
+      <br />
       <div class="field is-grouped is-grouped-centered">
         <p class="control">
           <button class="button is-primary" @click="submit">Submit</button>
