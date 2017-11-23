@@ -8,7 +8,7 @@
         <div>
           <h1>{{login ? "Login" : "Register"}}</h1>
         </div>
-        <div v-show="message" class="message">
+        <div v-show="message" class="msg">
           {{message}}
         </div>
 
@@ -22,7 +22,7 @@
         </div>
         <div class="field">
           <p class="control has-icons-left has-icons-right">
-            <input class="input" type="user" placeholder="User" v-model="user">
+            <input :class="['input', {'is-danger': error}]" @click="error=false; message = ''" type="user" placeholder="User" v-model="user">
             <span class="icon is-small is-left">
               <i class="fa fa-user"></i>
             </span>
@@ -30,7 +30,7 @@
         </div>
         <div class="field">
           <p class="control has-icons-left">
-            <input class="input" type="password" placeholder="Password" v-model="password">
+            <input :class="['input', {'is-danger': error}]" @click="error=false; message=''" type="password" placeholder="Password" v-model="password">
             <span class="icon is-small is-left">
               <i class="fa fa-lock"></i>
             </span>
@@ -85,7 +85,8 @@
         email: "",
         user: "",
         password: "",
-        message: this.$route.query.message || ''
+        message: this.$route.query.message || '',
+        error: false
       }
     },
     methods: {
@@ -110,8 +111,8 @@
 
             this.$router.push({path: '/'})
           }).catch(function(error) {
-            console.error(error)
             this.message = "Invalid login."
+            this.error = true
           }.bind(this))
         } else {
         }
@@ -127,7 +128,8 @@
 </script>
 
 <style>
-  .message {
-    color: red
+  .msg {
+    color: red;
+    padding-bottom: 10px;
   }
 </style>
