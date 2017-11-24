@@ -21,7 +21,13 @@ module.exports = {
   /*
   ** Build configuration
   */
+  // This gets rid of the bulma warnings
   build: {
+    postcss: {
+      plugins: {
+        'postcss-custom-properties': false
+      }
+    }
     /*
     ** Run ESLint on save
     */
