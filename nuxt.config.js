@@ -50,8 +50,12 @@ module.exports = {
     '@nuxtjs/bulma'
   ],
   apollo: {
-    networkInterfaces: {
-      default: '~/apollo/network-interfaces/default.js'
+    // networkInterfaces: {
+    //   default: '~/apollo/network-interfaces/default.js'
+    // }
+    clientConfigs: {
+      default: '~/apollo/client-configs/default.js',
+      // test: '~/apollo/client-configs/test.js'
     }
   },
   router: {
@@ -62,3 +66,4 @@ module.exports = {
   ]
 
 }
+

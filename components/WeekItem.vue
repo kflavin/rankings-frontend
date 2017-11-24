@@ -1,7 +1,7 @@
 <template>
   <tr>
     <td>
-      <b>{{week.date}}</b>
+      <b>{{date}}</b>
     </td>
     <td>
       <nuxt-link :to="`week/${week.id}`" class="button is-small is-info is-outlined">Week {{week.id}}</nuxt-link>
@@ -19,6 +19,15 @@ export default {
   name: 'WeekItem',
   props: ['week'],
   created: function() {
+  },
+  computed: {
+    date() {
+      return this.week.date.split("-").splice(1).join("-")
+    }
+},
+  mounted: function() {
+    console.log("WEEK")
+    console.log(this.week)
   }
 }
 
