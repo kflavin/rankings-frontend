@@ -141,17 +141,17 @@
       },
       submission: {
         query: mySubmission,
-        error: (error) => {
-          this.submission = null
-          if (error.message.toLowerCase() == "GraphQL error: Not logged in".toLowerCase()) {
-            console.log("logging you out")
-            this.submission = null
-            destroyToken(this.$store)
-          } else if (error.message.toLowerCase() == "could not find submission for user") {
-            console.log("No current submission for this user")
-          }
-        },
-        errorPolicy: "all",
+//        error: (error) => {
+//          this.submission = null
+//          if (error.message.toLowerCase() == "GraphQL error: Not logged in".toLowerCase()) {
+//            console.log("logging you out")
+//            this.submission = null
+//            destroyToken(this.$store)
+//          } else if (error.message.toLowerCase() == "could not find submission for user") {
+//            console.log("No current submission for this user")
+//          }
+//        },
+        errorPolicy: "none",
         update: function(data) {
           console.log("calling update")
           console.log(data.mySubmission)

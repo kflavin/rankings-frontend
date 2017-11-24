@@ -74,7 +74,7 @@
   import { mapGetters } from 'vuex'
 
   export default {
-    created: function() {
+    mounted: function() {
       if (this.isAuthenticated) {
         this.$router.push({path: '/'})
       }

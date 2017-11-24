@@ -45,6 +45,15 @@
 //      }
     },
     mounted: function() {
+      console.log("mounted!!")
+        const username = getUserNameFromLocalStorage()
+        const userid = getUserIdFromLocalStorage()
+
+        if (userid != null) {
+          console.log("We have a user!")
+          this.$store.commit('setCurrentUserId', userid)
+          this.$store.commit('setCurrentUserName', username)
+        }
     },
 //    computed: mapGetters({isAuthenticated: 'isAuthenticated'}),
 
