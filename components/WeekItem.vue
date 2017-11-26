@@ -26,8 +26,8 @@ export default {
     }
 },
   mounted: function() {
-    console.log("WEEK")
-    console.log(this.week)
+//    console.log("WEEK")
+//    console.log(this.week)
   }
 }
 

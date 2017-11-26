@@ -1,5 +1,5 @@
-{
-  weeks {
+query allWeeks($year: Int){
+  weeks(year: $year) {
     id
     date
   }

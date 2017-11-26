@@ -1,9 +1,11 @@
 <template>
   <div>
     <div>
-      <h1>Weekly Rankings</h1><br/>
+      <h1>Weekly Rankings</h1>
+      <select v-model="selectedYear">
+        <option v-for="year in allYears" :key="year" selected>{{year}}</option>
+      </select>
     </div>
-
     <div>
       <table>
         <thead>
@@ -30,6 +32,7 @@
 <script>
 import Logo from '~/components/Logo'
 import WeekItem from '~/components/WeekItem'
+import years from '~/apollo/queries/allYears'
 
 //import { ALL_WEEKS_QUERY } from '@/assets/graphql.js'
 //import allWeeks from '~/apollo/queries/allWeeks.gql'
@@ -46,15 +49,53 @@ export default {
     runit: function() {
     }
   },
+  created() {
+    console.log("created")
+  },
+  mounted() {
+    console.log("mounted year")
+    console.log(this.weeks)
+  },
   data: function() {
     return {
-      allWeeks: []
+      allWeeks: [],
+      allYears: [],
+    }
+  },
+  fetch(context) {
+    console.log("fetch")
+  },
+  asyncData(context) {
+    console.log("setting up async data")
+    return {
+      selectedYear: 0
     }
   },
   apollo: {
     weeks: {
-      prefetch: true,
-      query: weeks
+//      prefetch: true,
+      query: weeks,
+      variables() {
+        console.log("apollo variables...")
+        return {
+          year: this.selectedYear
+        }
+      },
+      update(data) {
+        console.log("update weeks")
+        if (this.selectedYear == 0) {
+          console.log("update selected year")
+          this.selectedYear = data.weeks[0].date.split("-")[0]
+        }
+        return data.weeks
+      }
+    },
+    allYears: {
+      query: years,
+      update: function(data) {
+        console.log("update years")
+        return data.allYears
+      }
     }
   }
 }
