@@ -2,10 +2,9 @@
   <div>
     <div>
       <h1>Weekly Rankings</h1>
-      <select v-model="selectedYear">
+      <select v-model="currentYr">
         <option v-for="year in allYears" :key="year">{{year}}</option>
       </select>
-      Year: {{currentYr}}
     </div>
     <div>
       <table>
@@ -43,7 +42,7 @@ import { mapGetters } from 'vuex'
 export default {
   updated() {
     console.log("updated hook")
-    this.$store.commit('setCurrentYear', this.selectedYear)
+//    this.$store.commit('setCurrentYear', this.selectedYear)
   },
   beforeUpdate() {
     console.log("before update hook")
@@ -62,13 +61,16 @@ export default {
   },
   computed: {
     ...mapGetters(['isAuthenticated', 'currentYear']),
-    currentYr: function() {
-      console.log("get current year " + this.currentYear + " " + this.selectedYear)
-      if (this.currentYear != 0) {
+    currentYr: {
+      get: function() {
+        console.log("get current year " + this.currentYear + " " + this.selectedYear)
         return this.currentYear
-      } else {
-        return this.selectedYear
+      },
+      set: function(val) {
+        console.log("currentYr setter, year=" + val)
+        this.$store.commit('setCurrentYear', val)
       }
+
     }
   },
   components: {
@@ -85,15 +87,11 @@ export default {
   mounted() {
     console.log("mounted year")
     console.log(this.currentYr)
-//    console.log(this.weeks)
-//    console.log(this.isAuthenticated)
-//    console.log("current year is " + this.currentYear)
   },
   data: function() {
     return {
       allWeeks: [],
       allYears: [],
-      selectedYear: 0
     }
   },
   fetch(context) {
@@ -110,21 +108,13 @@ export default {
 //      prefetch: true,
       query: weeks,
       variables() {
-        console.log("apollo variables...")
-        return { year: this.currentYear != 0 ? this.currentYear : this.selectedYear }
-
-//        return {
-//          year: this.selectedYear
-//        }
+        console.log("apollo variables.  year=" + this.currentYear)
+        return {year: this.currentYear}
       },
       update(data) {
-        console.log("update weeks")
-        if (this.selectedYear == 0) {
-          console.log("update selected year")
-          this.selectedYear = data.weeks[0].date.split("-")[0]
-          this.$store.commit('setCurrentYear', data.weeks[0].date.split("-")[0])
-          console.log("Current year has been set in store to:")
-          console.log(this.currentYear)
+        console.log("update weeks yr=" + this.currentYr)
+        if (this.currentYr == 0) {
+          this.currentYr = data.weeks[0].date.split("-")[0]
         }
         return data.weeks
       }
