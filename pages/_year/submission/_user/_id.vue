@@ -72,7 +72,7 @@
       },
       username() {
         console.log("username")
-        console.log(this.rankings)
+//        console.log(this.rankings.user.name)
         return this.rankings ? this.rankings.user.name : null
       }
     },
@@ -89,7 +89,7 @@
         },
         variables: function() {
           return {
-            num: this.$route.params.num,
+            num: this.$route.params.id,
             year: this.$route.params.year,
             user: this.$route.params.user
           }

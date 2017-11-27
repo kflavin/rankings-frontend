@@ -1,5 +1,5 @@
-query SubmissionsByWeek($num: Int = 0, $year: Int, $id: Int = 0) {
-  weeks(num: $num, year: $year, id: $id) {
+query SubmissionsByWeek($num: Int = 0, $year: Int) {
+  weeks(num: $num, year: $year) {
     id
     num
     date

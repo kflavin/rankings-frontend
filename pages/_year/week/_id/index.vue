@@ -42,7 +42,8 @@
         return this.$route.params.year
       },
       weeknum() {
-        return this.week == null ? null : this.week.num
+//        return this.week == null ? null : this.week.num
+        return this.$route.params.id
       },
       submissions() {
         if (this.week) {
@@ -82,10 +83,10 @@
       week: {
         query: SubmissionsByWeek,
         variables: function() {
+
           return {
             num: this.weeknum,
-            year: this.currentYear,
-            id: Math.floor(Math.random() * 1000000)
+            year: this.currentYear
           }
         },
         error(error) {
