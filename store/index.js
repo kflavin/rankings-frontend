@@ -10,7 +10,8 @@ const createStore = () => {
       username: "",
       selections: [],
       user: {},
-      token: ""
+      token: "",
+      currentYear: 0
     },
     mutations,
     getters

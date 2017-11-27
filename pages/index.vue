@@ -3,8 +3,9 @@
     <div>
       <h1>Weekly Rankings</h1>
       <select v-model="selectedYear">
-        <option v-for="year in allYears" :key="year" selected>{{year}}</option>
+        <option v-for="year in allYears" :key="year">{{year}}</option>
       </select>
+      Year: {{currentYr}}
     </div>
     <div>
       <table>
@@ -40,7 +41,36 @@ import weeks from '~/apollo/queries/allWeeksSimple.gql'
 import { mapGetters } from 'vuex'
 
 export default {
-  computed: mapGetters(['isAuthenticated']),
+  updated() {
+    console.log("updated hook")
+    this.$store.commit('setCurrentYear', this.selectedYear)
+  },
+  beforeUpdate() {
+    console.log("before update hook")
+  },
+  beforeMount() {
+    console.log("before mount hook")
+  },
+  activated() {
+    console.log("activated hook")
+  },
+  deactivated() {
+    console.log("deactivated hook")
+  },
+  errorCapturedU() {
+    console.log("error captured hook")
+  },
+  computed: {
+    ...mapGetters(['isAuthenticated', 'currentYear']),
+    currentYr: function() {
+      console.log("get current year " + this.currentYear + " " + this.selectedYear)
+      if (this.currentYear != 0) {
+        return this.currentYear
+      } else {
+        return this.selectedYear
+      }
+    }
+  },
   components: {
     WeekItem,
     Logo
@@ -54,38 +84,47 @@ export default {
   },
   mounted() {
     console.log("mounted year")
-    console.log(this.weeks)
+    console.log(this.currentYr)
+//    console.log(this.weeks)
+//    console.log(this.isAuthenticated)
+//    console.log("current year is " + this.currentYear)
   },
   data: function() {
     return {
       allWeeks: [],
       allYears: [],
+      selectedYear: 0
     }
   },
   fetch(context) {
     console.log("fetch")
   },
-  asyncData(context) {
-    console.log("setting up async data")
-    return {
-      selectedYear: 0
-    }
-  },
+//  asyncData(context) {
+//    console.log("setting up async data")
+//    return {
+//      selectedYear: 0
+//    }
+//  },
   apollo: {
     weeks: {
 //      prefetch: true,
       query: weeks,
       variables() {
         console.log("apollo variables...")
-        return {
-          year: this.selectedYear
-        }
+        return { year: this.currentYear != 0 ? this.currentYear : this.selectedYear }
+
+//        return {
+//          year: this.selectedYear
+//        }
       },
       update(data) {
         console.log("update weeks")
         if (this.selectedYear == 0) {
           console.log("update selected year")
           this.selectedYear = data.weeks[0].date.split("-")[0]
+          this.$store.commit('setCurrentYear', data.weeks[0].date.split("-")[0])
+          console.log("Current year has been set in store to:")
+          console.log(this.currentYear)
         }
         return data.weeks
       }

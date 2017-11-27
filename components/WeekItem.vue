@@ -4,10 +4,10 @@
       <b>{{date}}</b>
     </td>
     <td>
-      <nuxt-link :to="`week/${week.id}`" class="button is-small is-info is-outlined">Week {{week.id}}</nuxt-link>
+      <nuxt-link :to="`week/${week.id}`" class="button is-small is-info is-outlined">Week {{week.num}}</nuxt-link>
     </td>
     <td>
-      <nuxt-link :to="`week/${week.id}/ranking`" :week="week" class="button is-small is-link is-outlined">Week {{week.id}}</nuxt-link>
+      <nuxt-link :to="`week/${week.id}/ranking`" :week="week" class="button is-small is-link is-outlined">Week {{week.num}}</nuxt-link>
 
     </td>
   </tr>

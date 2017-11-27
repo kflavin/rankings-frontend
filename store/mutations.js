@@ -2,6 +2,10 @@
 
 export const mutations = {
 
+  setCurrentYear: function(state, year) {
+    state.currentYear = year;
+  },
+
   setCurrentUserName: function(state, username) {
     state.username = username;
   },
