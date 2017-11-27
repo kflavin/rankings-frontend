@@ -48,10 +48,12 @@
   import mySubmission from '@/apollo/queries/mySubmission'
   import submitUserRankings from '@/apollo/queries/mutations/submitUserRankings'
   import SubmitItem from '@/components/SubmitItem'
+  import {mapGetters} from 'vuex'
 
   export default {
     components: {
-      SubmitItem
+      SubmitItem,
+      ...mapGetters(['currentYear'])
     },
     created: function() {
     },
@@ -103,7 +105,7 @@
           }
         }).then(data => {
           this.$emit('selectionsSubmitted')
-          this.$router.push({name: "week-id", params: {id: this.week.id}})
+          this.$router.push({name: "year-week-id", params: {year: 2017, id: this.week.id}})
         })
       }
     },

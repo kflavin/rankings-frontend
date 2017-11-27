@@ -20,6 +20,7 @@
           v-for="week in weeks"
           :key="week.id"
           :week="week"
+          :currentYear="currentYear"
           is="week-item">
           </tr>
         </tbody>

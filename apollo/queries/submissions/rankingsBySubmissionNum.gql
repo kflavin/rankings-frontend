@@ -1,0 +1,20 @@
+query rankingsBySubmissionNum($year: Int = 0, $num: Int = 0, $user: String) {
+  submissions(year: $year, num: $num, user: $user) {
+    id
+    user {
+      id
+      name
+    }
+    rankings{
+      position
+      team {
+        name
+      }
+    }
+    week {
+          id
+          date
+          num
+    }
+  }
+}

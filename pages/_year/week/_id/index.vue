@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h1>Submissions for Week {{weekid}}</h1><br/>
+      <h1>Submissions for Week {{weeknum}}</h1><br/>
     </div>
 
     <div>
@@ -10,7 +10,9 @@
       <submission-item
       v-for="submission in submissions"
       :key="submission.id"
-      :submission="submission">
+      :submission="submission"
+      :currentYear="currentYear"
+      :weeknum="weeknum">
       </submission-item>
       </div>
 
@@ -35,6 +37,12 @@
     computed: {
       weekid() {
         return this.$route.params.id
+      },
+      currentYear() {
+        return this.$route.params.year
+      },
+      weeknum() {
+        return this.week == null ? null : this.week.num
       },
       submissions() {
         if (this.week) {
@@ -75,7 +83,9 @@
         query: SubmissionsByWeek,
         variables: function() {
           return {
-            id: this.weekid
+            num: this.weeknum,
+            year: this.currentYear,
+            id: Math.floor(Math.random() * 1000000)
           }
         },
         error(error) {
