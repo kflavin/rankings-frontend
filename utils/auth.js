@@ -38,6 +38,7 @@ var destroyToken = (store) => {
   store.commit('clearCurrentUserId')
   store.commit('clearCurrentUserName')
   store.commit('clearCurrentUser')
+  store.commit('clearToken')
 }
 
 var getTokenFromLocalStorage = function () {
@@ -49,7 +50,8 @@ var getTokenFromLocalStorage = function () {
   }
 
   if (Date.now() > parseInt(expiration)) {
-    this.destroyToken()
+    console.log('Destroy token')
+    destroyToken()
     return null
   } else {
     return token
