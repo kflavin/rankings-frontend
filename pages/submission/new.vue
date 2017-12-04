@@ -62,6 +62,9 @@
         console.log("computed username")
         console.log(this.getUserName)
         return this.getUserName
+      },
+      year() {
+        return this.week.date.split("-")[0]
       }
     },
     created: function() {
@@ -69,10 +72,11 @@
       console.log(this.onServer)
     },
     mounted() {
-      console.log("getOnServer, mounted")
-      console.log(this.onServer)
-      console.log("your token is")
-      console.log(this.getToken)
+      console.log("New Submission, mounted")
+      var link = this.$apollo.vm.$root._apolloProvider.clients.defaultClient.link
+      // console.log(this.$apollo.vm.$root._apolloProvider.clients.defaultClient)
+      // link.request()
+
     },
     watch: {
       resetCounter(c) {
@@ -122,7 +126,7 @@
           }
         }).then(data => {
           this.$emit('selectionsSubmitted')
-          this.$router.push({name: "year-week-id", params: {year: 2017, id: this.week.id}})
+          this.$router.push({name: "year-week-num", params: {year: this.year, num: this.week.num}})
         })
       }
     },

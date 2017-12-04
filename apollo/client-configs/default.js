@@ -41,9 +41,12 @@ export default (ctx) => {
   // let token = ctx.isServer ? ctx.req.session : window.__NUXT__.state.session
   console.log('Configure the apollo client, and set the token')
   console.log(ctx.store.state.token)
-  let token = ctx.isServer ? ctx.req.session : localStorage.getItem('authToken')
+
+  // Add this to middleware, so it's re-evaluated with each request
+  // let token = ctx.isServer ? ctx.req.session : localStorage.getItem('authToken')
+  // let token = ctx.isServer ? ctx.req.session : window.__NUXT__.state.token
   // let token = ctx.isServer ? ctx.req.session : ctx.store.state.token
-  console.log(token)
+  // console.log(token)
 
   // var token;
   // if (ctx.isClient) {
@@ -55,6 +58,7 @@ export default (ctx) => {
 
   // middleware
   const middlewareLink = new ApolloLink((operation, forward) => {
+    let token = ctx.isServer ? ctx.req.session : localStorage.getItem('authToken')
     operation.setContext({
       headers: { authorization: `Bearer ${token}` }
     })
