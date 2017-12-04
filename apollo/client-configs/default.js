@@ -28,18 +28,30 @@ import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
 export default (ctx) => {
-  var endpoint = ""
-  if (process.env.NODE_ENV == "production") {
-    endpoint = "https://rankings-backend.herokuapp.com/simple"
+  var endpoint = ''
+  if (process.env.NODE_ENV === 'production') {
+    endpoint = 'https://rankings-backend.herokuapp.com/simple'
   } else {
-    endpoint = "http://127.0.0.1:5000/simple"
+    endpoint = 'http://127.0.0.1:5000/simple'
   }
 
   const httpLink = new HttpLink({ uri: endpoint })
 
   // auth token
   // let token = ctx.isServer ? ctx.req.session : window.__NUXT__.state.session
-  let token = ctx.isServer ? ctx.req.session : localStorage.getItem('authToken');
+  console.log('Configure the apollo client, and set the token')
+  console.log(ctx.store.state.token)
+  let token = ctx.isServer ? ctx.req.session : localStorage.getItem('authToken')
+  // let token = ctx.isServer ? ctx.req.session : ctx.store.state.token
+  console.log(token)
+
+  // var token;
+  // if (ctx.isClient) {
+  //   token = localStorage.getItem('authToken');
+  //     // var token = getToken()
+  //     // req.options.headers['Authorization'] = 'Bearer ' + token
+  //     // req.options.headers['authorization'] = localStorage.getItem('token') ? localStorage.getItem('token') : null;
+  //   }
 
   // middleware
   const middlewareLink = new ApolloLink((operation, forward) => {

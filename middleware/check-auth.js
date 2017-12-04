@@ -1,15 +1,27 @@
-import { getUserNameFromLocalStorage, getUserIdFromLocalStorage } from '~/utils/auth'
+import { getUserNameFromLocalStorage, getUserIdFromLocalStorage, getTokenFromLocalStorage } from '~/utils/auth'
 
 export default function ({ isServer, store, req }) {
+  console.log('check-auth middleware')
+
+  if (isServer) {
+    console.log('request, setOnServer ')
+    // console.log(req)
+    // console.log(store)
+    console.log(req.headers)
+    console.log(req.data)
+    store.commit('setOnServer', true)
+  }
 
   if (!isServer) {
-    console.log("setting store...")
+    // console.log(req)
+    console.log('setting store...')
     const username = getUserNameFromLocalStorage()
     const userid = getUserIdFromLocalStorage()
+    const token = getTokenFromLocalStorage()
 
     store.commit('setCurrentUserId', userid)
     store.commit('setCurrentUserName', username)
-
+    store.commit('setToken', token)
   }
 
   // If nuxt generate, pass this middleware
@@ -31,4 +43,3 @@ export default function ({ isServer, store, req }) {
   // console.log(user)
   // store.commit('setCurrentUserId', user)
 }
-

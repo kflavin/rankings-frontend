@@ -6,13 +6,14 @@
 var Cookie = require('js-cookie')
 var jwtDecode = require('jwt-decode')
 
-var setToken = function(user, name, expiration) {
+var setToken = function (user, name, expiration) {
   const id = user.userid
   const token = user.token
   localStorage.setItem('authToken', token)
   localStorage.setItem('username', name)
   localStorage.setItem('userid', id)
   localStorage.setItem('authTokenExpiration', expiration)
+  // localStorage.setItem('user', JSON.stringify(user))
   // Cookie.set('token', token)
   // Cookie.set('tokenExpiration', expiration)
 
@@ -39,56 +40,56 @@ var destroyToken = (store) => {
   store.commit('clearCurrentUser')
 }
 
-var getTokenFromLocalStorage = function() {
+var getTokenFromLocalStorage = function () {
   var token = localStorage.getItem('authToken')
   var expiration = localStorage.getItem('authTokenExpiration')
 
   if (!token || !expiration) {
-    return null;
+    return null
   }
 
   if (Date.now() > parseInt(expiration)) {
-    this.destroyToken();
-    return null;
+    this.destroyToken()
+    return null
   } else {
-    return token;
+    return token
   }
 }
 
-var getUserFromLocalStorage = function() {
+var getUserFromLocalStorage = function () {
   var token = getTokenFromLocalStorage()
 
   if (!token) return
   return jwtDecode(token)
 }
 
-var getTokenFromCookie = function(req) {
+var getTokenFromCookie = function (req) {
   if (!req || !req.headers.cookie) return
   const authToken = req.headers.cookie.split(';').find(c => c.trim().startsWith('authToken='))
   if (!authToken) return
-  const jwt = autToken.split('=')[1]
+  const jwt = authToken.split('=')[1]
   return jwtDecode(jwt)
 }
 
-var getUserFromCookie = function() {
+var getUserFromCookie = function () {
   var token = getTokenFromCookie()
   if (!token) return
   return jwtDecode(token)
 }
 
-var getUserNameFromLocalStorage = function() {
+var getUserNameFromLocalStorage = function () {
   return localStorage.getItem('username')
 }
 
-var getUserIdFromLocalStorage = function() {
+var getUserIdFromLocalStorage = function () {
   return localStorage.getItem('userid')
 }
 
-var loggedIn = function() {
+var loggedIn = function () {
   if (this.getToken()) {
-    return true;
+    return true
   } else {
-    return false;
+    return false
   }
 }
 
@@ -103,4 +104,3 @@ module.exports = {
   getUserNameFromLocalStorage,
   getUserIdFromLocalStorage
 }
-

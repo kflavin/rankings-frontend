@@ -2,12 +2,12 @@
   <div>
     <div class="columns">
       <div class="column"></div>
-      <div class="column"><h1>Week <span v-if="week">{{ week.id}} Submission</span></h1></div>
+      <div class="column"><h1>Week <span v-if="week">{{ week.num}} Submission</span></h1></div>
       <div class="column"></div>
     </div>
 
 
-    <div v-if="submission"><nuxt-link :to="`/submission/${this.submission.id}`">Your submission is in!</nuxt-link></div>
+    <div v-if="submission"><nuxt-link :to="`/${currentYear}/submission/${username}/${weeknum}`">Your submission is in!</nuxt-link></div>
     <div v-else>
       <submit-item
       v-for="rank in this.positions"
@@ -37,7 +37,6 @@
       </div>
 
     </div>
-
   </div>
 </template>
 
@@ -52,10 +51,28 @@
 
   export default {
     components: {
-      SubmitItem,
-      ...mapGetters(['currentYear'])
+      SubmitItem
+    },
+    computed: {
+      ...mapGetters(['currentYear', 'onServer', 'getUserName', 'getToken']),
+      weeknum() {
+        return this.week.num
+      },
+      username() {
+        console.log("computed username")
+        console.log(this.getUserName)
+        return this.getUserName
+      }
     },
     created: function() {
+      console.log("onServer")
+      console.log(this.onServer)
+    },
+    mounted() {
+      console.log("getOnServer, mounted")
+      console.log(this.onServer)
+      console.log("your token is")
+      console.log(this.getToken)
     },
     watch: {
       resetCounter(c) {
@@ -132,6 +149,8 @@
       teams: {
         query: allTeams,
         update: function(data) {
+          console.log("All teams retrieved")
+          console.log(data)
           return data.teams;
         }
       },
@@ -143,6 +162,13 @@
       },
       submission: {
         query: mySubmission,
+        error: (error) => {
+          console.log(error.message.toLowerCase())
+          if (error.message.toLowerCase().match("not logged in")) {
+            console.log("destroy the token")
+//            destroyToken(this.$store)
+          }
+        },
 //        error: (error) => {
 //          this.submission = null
 //          if (error.message.toLowerCase() == "GraphQL error: Not logged in".toLowerCase()) {
@@ -153,12 +179,13 @@
 //            console.log("No current submission for this user")
 //          }
 //        },
-        errorPolicy: "none",
+//        errorPolicy: "none",
         update: function(data) {
           console.log("calling update")
           console.log(data.mySubmission)
           return data.mySubmission
-        }
+        },
+        fetchPolicy: 'network-only'
       }
     }
   }

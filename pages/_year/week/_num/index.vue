@@ -43,7 +43,7 @@
       },
       weeknum() {
 //        return this.week == null ? null : this.week.num
-        return this.$route.params.id
+        return this.$route.params.num
       },
       submissions() {
         if (this.week) {

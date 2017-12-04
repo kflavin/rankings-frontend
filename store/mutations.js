@@ -1,61 +1,60 @@
-
-
 export const mutations = {
 
-  setCurrentYear: function(state, year) {
-    state.currentYear = year;
+  setOnServer: function (state, onServer) {
+    console.log('setting onServer state')
+    state.onServer = onServer
   },
 
-  setCurrentUserName: function(state, username) {
-    state.username = username;
-  },
-  clearCurrentUserName: function(state, username) {
-    state.username = "";
+  setCurrentYear: function (state, year) {
+    state.currentYear = year
   },
 
-  setCurrentUserId: function(state, userId) {
-    state.userId = userId;
+  setCurrentUserName: function (state, username) {
+    state.username = username
   },
-  clearCurrentUserId: function(state) {
-    state.userId = 0;
+  clearCurrentUserName: function (state, username) {
+    state.username = ''
   },
 
-  setCurrentUser: function(state, user) {
-    state.user = user;
+  setCurrentUserId: function (state, userId) {
+    state.userId = userId
   },
-  clearCurrentUser: function(state, user) {
+  clearCurrentUserId: function (state) {
+    state.userId = 0
+  },
+
+  setCurrentUser: function (state, user) {
+    state.user = user
+  },
+  clearCurrentUser: function (state, user) {
     state.user = {}
   },
 
-  setToken: function(state, token) {
-    state.user = token;
+  setToken: function (state, token) {
+    state.token = token
   },
-  clearToken: function(state) {
-    state.token = ""
+  clearToken: function (state) {
+    state.token = ''
   },
-
-
-  setTeams: function(state, teams) {
-    state.teams = teams;
+  setTeams: function (state, teams) {
+    state.teams = teams
   },
-  clearTeams: function(state) {
-    state.teams = {};
+  clearTeams: function (state) {
+    state.teams = {}
   },
-
-  addSelection: function(state, selection) {
+  addSelection: function (state, selection) {
     if (state.selections.indexOf(selection) < 0) {
       state.selections.push(selection)
     } else {
     }
   },
-  delSelection: function(state, selection) {
+  delSelection: function (state, selection) {
     state.selections.splice(state.selections.indexOf(selection), 1)
-
   },
-  setSelections: function(state, selections) {
-    state.selections = selections;
+  setSelections: function (state, selections) {
+    state.selections = selections
   },
-  clearSelections: function(state) {
+  clearSelections: function (state) {
     state.selections = []
   }
 }

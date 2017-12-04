@@ -1,5 +1,5 @@
-query weekRanking($weekid: Int!) {
-  weekRanking(weekid: $weekid) {
+query weekRanking($weeknum: Int!, $year: Int!) {
+  weekRanking(weeknum: $weeknum, year: $year) {
     rankings
   }
 }

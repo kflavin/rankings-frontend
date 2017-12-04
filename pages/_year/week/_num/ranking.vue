@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Rankings for week: {{weekid}}</h1>
+    <h1>Rankings for week: {{weeknum}}</h1>
 
     <table>
       <thead>
@@ -27,13 +27,18 @@
 
   export default {
     created() {
-      console.log("route param " + this.$route.params.id)
-      console.log("computed " + this.weekid)
+//      console.log("route param " + this.$route.params.id)
+//      console.log("computed " + this.weekid)
+      console.log(this.$route.params)
     },
     computed: {
-      weekid() {
-        console.log("week id is " + this.$route.params.id)
-        return this.$route.params.id
+      weeknum() {
+        console.log("week num is " + this.$route.params.num)
+        return this.$route.params.num
+      },
+      year() {
+        console.log("week year is " + this.$route.params.year)
+        return this.$route.params.year
       }
     },
     props: {
@@ -61,7 +66,8 @@
         variables() {
           console.log("here we are in variables! " + this.weekid)
           return {
-            weekid: this.weekid
+            weeknum: this.weeknum,
+            year: this.year
           }
         },
         fetchPolicy: 'network-only'

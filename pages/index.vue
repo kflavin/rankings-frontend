@@ -83,7 +83,7 @@ export default {
     }
   },
   created() {
-    console.log("created")
+    console.log("created index")
   },
   mounted() {
     console.log("mounted year")

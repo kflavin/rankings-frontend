@@ -1,6 +1,7 @@
 {
     currentWeek {
         id
+        num
         date
     }
 }
