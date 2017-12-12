@@ -3,5 +3,6 @@ query allWeeks($year: Int){
     id
     date
     num
+    active
   }
 }

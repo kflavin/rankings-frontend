@@ -114,6 +114,7 @@ export default {
       },
       update(data) {
         console.log("update weeks yr=" + this.currentYr)
+        // If the year hasn't been set in app state, then set it now from the server response.
         if (this.currentYr == 0) {
           this.currentYr = data.weeks[0].date.split("-")[0]
         }
