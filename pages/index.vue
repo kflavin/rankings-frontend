@@ -2,7 +2,7 @@
   <div>
     <div>
       <h1>Weekly Rankings</h1>
-      <select v-model="currentYr">
+      <select class="dropdown" v-model="currentYr">
         <option v-for="year in allYears" :key="year">{{year}}</option>
       </select>
     </div>
@@ -160,5 +160,8 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+.dropdown {
+  width: unset;
 }
 </style>
