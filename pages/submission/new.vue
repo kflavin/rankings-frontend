@@ -190,7 +190,7 @@
 //        },
 //        errorPolicy: "none",
         update: function(data) {
-          console.log("calling update")
+          console.log("checking for my submission")
           console.log(data.mySubmission)
           return data.mySubmission
         },
