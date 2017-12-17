@@ -2,12 +2,14 @@
   <div>
     <div class="columns">
       <div class="column"></div>
-      <div class="column"><h1>Week <span v-if="week">{{ week.num}} Submission</span></h1></div>
+      <div class="column" v-if="currentWeek"><h1>Week <span>{{ week.num}} Submission</span></h1></div>
+      <div class="column" v-else><h1>Submissions Closed</span></h1></div>
       <div class="column"></div>
     </div>
 
 
-    <div v-if="submission"><nuxt-link :to="`/${currentYear}/submission/${username}/${weeknum}`">Your submission is in!</nuxt-link></div>
+    <div v-if="!currentWeek">Voting is open between Sunday and Tuesday.  <nuxt-link :to="'/'">Go back</nuxt-link></div>
+    <div v-else-if="submission"><nuxt-link :to="`/${currentYear}/submission/${username}/${weeknum}`">Your submission is in!</nuxt-link></div>
     <div v-else>
       <submit-item
       v-for="rank in this.positions"
@@ -65,6 +67,9 @@
       },
       year() {
         return this.week.date.split("-")[0]
+      },
+      currentWeek() {
+        return this.week ? true : false
       }
     },
     created: function() {
