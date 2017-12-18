@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Rankings for week: {{weeknum}}</h1>
+    <h1>Rankings for Week: {{weeknum}}</h1>
 
     <table>
       <thead>
@@ -10,7 +10,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="ranking in rankings">
+        <tr v-for="ranking in rankings" v-bind:key="ranking.id">
           <td>{{ranking[0]}}</td>
           <td>{{ranking[1]}}</td>
         </tr>

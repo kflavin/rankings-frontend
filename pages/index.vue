@@ -7,7 +7,7 @@
       </select>
     </div>
     <div>
-      <table>
+      <table class="table">
         <thead>
           <tr>
             <th>Week</th>

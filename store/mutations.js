@@ -1,5 +1,9 @@
 export const mutations = {
 
+  setSubmitted: function (state, submitted) {
+    state.submitted = submitted
+  },
+
   setOnServer: function (state, onServer) {
     console.log('setting onServer state')
     state.onServer = onServer

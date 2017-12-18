@@ -1,5 +1,3 @@
-
-
 export const getters = {
   isAuthenticated: function (state) {
     return !!state.userId
@@ -16,6 +14,9 @@ export const getters = {
   },
   getToken: function (state) {
     return state.token
+  },
+  isSubmitted: function (state) {
+    return state.submitted
   }
 }
 

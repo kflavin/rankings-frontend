@@ -13,7 +13,8 @@ const createStore = () => {
       user: {},
       token: '',
       currentYear: 0,
-      onServer: false
+      onServer: false,
+      submitted: null
     },
     mutations,
     getters,
