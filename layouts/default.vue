@@ -5,23 +5,7 @@
 	
 				<div class="head-banner boxed center clearfix">
 			<div class="ban-article ban-wrap center clearfix"><div id="ad-leaderboard-one">
-  <script>
-    var inlineAdCount = 0;
-    googletag.cmd.push(function() {
-      var mappingLeaderboard = googletag.sizeMapping()
-        .addSize([0, 0], [320, 50])
-        .addSize([768, 0], [728, 90])
-        .addSize([970, 0], [[970,90],[728, 90]])
-        .build();
-      googletag.defineSlot(dfpId + "ad-leaderboard-one", [728, 90], "ad-leaderboard-one")
-        .setTargeting("position", "1")
-        .defineSizeMapping(mappingLeaderboard)
-        .setCollapseEmptyDiv(true)
-        .addService(googletag.pubads());
-      googletag.pubads().enableSingleRequest();
-      googletag.enableServices();
-      googletag.display("ad-leaderboard-one");
-    });
+  <script v-html="googleAd">
   </script>
 </div></div>		</div>
 		<div class="layout-wrap boxed">
@@ -236,23 +220,7 @@
 		</form>
 		</div><div class="widget widget_reedwanwidgets__imagecode clearfix" id="reedwanwidgets__imagecode-2">					<div class="ban-wrap clearfix">
 			<div id="ad-medrec-one">
-  <script>
-    googletag.cmd.push(function() {
-      var mappingMedRecTall = googletag.sizeMapping()
-        .addSize([0, 0], [
-          [300, 600],
-          [300, 250]
-        ])
-        .build();
-      googletag.defineSlot(dfpId + "ad-medrec-one", [300, 250], "ad-medrec-one")
-        .setTargeting("position", "1")
-        .defineSizeMapping(mappingMedRecTall)
-        .setCollapseEmptyDiv(true)
-        .addService(googletag.pubads());
-      googletag.pubads().enableSingleRequest();
-      googletag.enableServices();
-      googletag.display("ad-medrec-one");
-    });
+  <script v-html="medRecOne">
   </script>
 </div>			</div>
 				</div><div class="widget wprss_widget clearfix" id="wp_rss_widget-3"><h4 class="widgettitle">Notre Dame Headlines</h4><div class="wp-rss-aggregator-widget">
@@ -300,23 +268,7 @@
 
 </div><div class="widget widget_reedwanwidgets__imagecode clearfix" id="reedwanwidgets__imagecode-3">					<div class="ban-wrap clearfix">
 			<div id="ad-medrec-two">
-  <script>
-    googletag.cmd.push(function() {
-      var mappingMedRec = googletag.sizeMapping()
-        .addSize([0, 0], [
-          [300, 250],
-          [300, 600]
-        ])
-        .build();
-      googletag.defineSlot(dfpId + "ad-medrec-two", [300, 250], "ad-medrec-two")
-        .setTargeting("position", "2")
-        .defineSizeMapping(mappingMedRec)
-        .setCollapseEmptyDiv(true)
-        .addService(googletag.pubads());
-      googletag.pubads().enableSingleRequest();
-      googletag.enableServices();
-      googletag.display("ad-medrec-two");
-    });
+  <script v-html="medRecTwo">
   </script>
 </div>			</div>
 				</div>	</aside>
@@ -340,21 +292,8 @@
 					<footer role="contentinfo" class="main-grid credit-row-wrap dark el-left" itemscope="itemscope" itemtype="https://schema.org/WPFooter">
 				<div class="main-grid credit-row">
 					<div class="credit-foot">
-						<div id="ad-leaderboard-mobile" class="fixed-mobile-footer"><script>
-    googletag.cmd.push(function() {
-      var mappingMobileLeaderboard = googletag.sizeMapping()
-        .addSize([0, 0], [320, 50])
-        .addSize([768, 0], [])
-        .build();
-      googletag.defineSlot(dfpId + "ad-leaderboard-mobile", [320, 50], "ad-leaderboard-mobile")
-        .defineSizeMapping(mappingMobileLeaderboard)
-        .setCollapseEmptyDiv(true)
-        .addService(googletag.pubads());
-      googletag.pubads().enableSingleRequest();
-      googletag.enableServices();
-      googletag.display("ad-leaderboard-mobile");
-    });
-  </script></div>
+						<div id="ad-leaderboard-mobile" class="fixed-mobile-footer">
+              <script v-html="leaderboardMobile"></script></div>
 <p><img class="size-full wp-image-33524 aligncenter" src="https://www.uhnd.com/wp-content/uploads/2017/03/uhnd-logo-60.png" alt="" width="278" height="60" /></p>
 					</div>
 									</div>
@@ -365,11 +304,9 @@
 			<div class="toTop"><i class="fa fa-angle-up"></i></div>
 	<script type='text/javascript' src='https://www.uhnd.com/wp-content/plugins/arqam/assets/js/scripts.js'></script>
 <script type='text/javascript' src='https://www.avantlink.com/ale/ale.php?p=126747&#038;pw=152415'></script>
-<script type='text/javascript'>
-/* <![CDATA[ */
-var wpcf7 = {"apiSettings":{"root":"https:\/\/www.uhnd.com\/wp-json\/","namespace":"contact-form-7\/v1"},"recaptcha":{"messages":{"empty":"Please verify that you are not a robot."}},"cached":"1"};
-/* ]]> */
+<script type='text/javascript' v-html="avantlink">
 </script>
+
 <script type='text/javascript' src='https://www.uhnd.com/wp-content/plugins/contact-form-7/includes/js/scripts.js'></script>
 <script type='text/javascript' src='https://www.uhnd.com/wp-content/plugins/q2w3-fixed-widget/js/q2w3-fixed-widget.min.js'></script>
 <script type='text/javascript' src='https://www.uhnd.com/wp-includes/js/wp-embed.min.js'></script>
@@ -389,6 +326,74 @@ var wpcf7 = {"apiSettings":{"root":"https:\/\/www.uhnd.com\/wp-json\/","namespac
   export default {
     components: {
       NavBar
+    },
+    data() {
+      return {
+        googleAd: `var inlineAdCount = 0;
+                    googletag.cmd.push(function() {
+                      var mappingLeaderboard = googletag.sizeMapping()
+                        .addSize([0, 0], [320, 50])
+                        .addSize([768, 0], [728, 90])
+                        .addSize([970, 0], [[970,90],[728, 90]])
+                        .build();
+                      googletag.defineSlot(dfpId + "ad-leaderboard-one", [728, 90], "ad-leaderboard-one")
+                        .setTargeting("position", "1")
+                        .defineSizeMapping(mappingLeaderboard)
+                        .setCollapseEmptyDiv(true)
+                        .addService(googletag.pubads());
+                      googletag.pubads().enableSingleRequest();
+                      googletag.enableServices();
+                      googletag.display("ad-leaderboard-one");
+                    });`,
+        medRecOne: `    googletag.cmd.push(function() {
+                    var mappingMedRecTall = googletag.sizeMapping()
+                      .addSize([0, 0], [
+                        [300, 600],
+                        [300, 250]
+                      ])
+                      .build();
+                    googletag.defineSlot(dfpId + "ad-medrec-one", [300, 250], "ad-medrec-one")
+                      .setTargeting("position", "1")
+                      .defineSizeMapping(mappingMedRecTall)
+                      .setCollapseEmptyDiv(true)
+                      .addService(googletag.pubads());
+                    googletag.pubads().enableSingleRequest();
+                    googletag.enableServices();
+                    googletag.display("ad-medrec-one");
+                  });`,
+        medRecTwo: `    googletag.cmd.push(function() {
+                  var mappingMedRec = googletag.sizeMapping()
+                    .addSize([0, 0], [
+                      [300, 250],
+                      [300, 600]
+                    ])
+                    .build();
+                  googletag.defineSlot(dfpId + "ad-medrec-two", [300, 250], "ad-medrec-two")
+                    .setTargeting("position", "2")
+                    .defineSizeMapping(mappingMedRec)
+                    .setCollapseEmptyDiv(true)
+                    .addService(googletag.pubads());
+                  googletag.pubads().enableSingleRequest();
+                  googletag.enableServices();
+                  googletag.display("ad-medrec-two");
+                });`,
+        leaderboardMobile: `googletag.cmd.push(function() {
+                var mappingMobileLeaderboard = googletag.sizeMapping()
+                  .addSize([0, 0], [320, 50])
+                  .addSize([768, 0], [])
+                  .build();
+                googletag.defineSlot(dfpId + "ad-leaderboard-mobile", [320, 50], "ad-leaderboard-mobile")
+                  .defineSizeMapping(mappingMobileLeaderboard)
+                  .setCollapseEmptyDiv(true)
+                  .addService(googletag.pubads());
+                googletag.pubads().enableSingleRequest();
+                googletag.enableServices();
+                googletag.display("ad-leaderboard-mobile");
+              });`,
+        avantlink: `/* <![CDATA[ */
+              var wpcf7 = {"apiSettings":{"root":"https:\/\/www.uhnd.com\/wp-json\/","namespace":"contact-form-7\/v1"},"recaptcha":{"messages":{"empty":"Please verify that you are not a robot."}},"cached":"1"};
+              /* ]]> */`
+      }
     }
   }
 
