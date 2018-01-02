@@ -166,6 +166,8 @@
       week: {
         query: currentWeek,
         update: function(data) {
+          console.log("analyze the current week")
+          console.log(data)
           return data.currentWeek
         }
       },

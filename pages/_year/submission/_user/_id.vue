@@ -88,6 +88,8 @@
           return data.submissions[0]
         },
         variables: function() {
+          console.log("set variables")
+          console.log(this.$route.params)
           return {
             num: this.$route.params.id,
             year: this.$route.params.year,
