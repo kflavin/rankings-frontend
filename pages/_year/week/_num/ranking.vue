@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Rankings for Week: {{weeknum}}</h1>
+    <h1>Rankings for {{parseInt(weeknum) === 0 ?"Final":""}} Week: {{parseInt(weeknum) || ""}}</h1>
 
     <table>
       <thead>

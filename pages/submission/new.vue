@@ -2,7 +2,7 @@
   <div>
     <div class="columns">
       <div class="column"></div>
-      <div class="column" v-if="currentWeek"><h1>Week <span>{{ week.num}} Submission</span></h1></div>
+      <div class="column" v-if="currentWeek"><h1>{{parseInt(week.num)?"":"Final"}} Week <span>{{ week.num || ""}} Submission</span></h1></div>
       <div class="column" v-else><h1>Submissions Closed</span></h1></div>
       <div class="column"></div>
     </div>

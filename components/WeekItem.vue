@@ -5,13 +5,13 @@
     </td>
     <td>
       <nuxt-link 
-      :to="`${currentYear}/week/${week.num}`" 
-      :class="['button', week.active ? 'is-info':'is-outlined', 'is-small', 'is-outlined']">Week {{week.num}}</nuxt-link>
+      :to="(week.num === 0 ? parseInt(currentYear) + 1 : currentYear) + `/week/${week.num}`" 
+      :class="['button', week.active ? 'is-info':'is-outlined', 'is-small', 'is-outlined']">{{!week.num ? "Final": ""}} Week {{week.num || ""}}</nuxt-link>
     </td>
     <td>
       <nuxt-link 
-      :to="`${currentYear}/week/${week.num}/ranking`" 
-      :week="week" :class="['button', {'is-info': week.active}, 'is-small', 'is-outlined']">Week {{week.num}}</nuxt-link>
+      :to="(week.num === 0 ? parseInt(currentYear) + 1 : currentYear) + `/week/${week.num}/ranking`" 
+      :week="week" :class="['button', {'is-info': week.active}, 'is-small', 'is-outlined']">{{!week.num ? "Final": ""}} Week {{week.num || ""}}</nuxt-link>
 
     </td>
   </tr>
@@ -21,7 +21,7 @@
 
 export default {
   name: 'WeekItem',
-  props: ['week', 'currentYear'],
+  props: ["currentYear", "week"],
   created: function() {
     // console.log(this.week)
   },

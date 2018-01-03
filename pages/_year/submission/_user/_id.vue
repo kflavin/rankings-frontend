@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h1>Week {{weeknum}} rankings for {{username}}</h1><br />
+      <h1>{{parseInt(weeknum)===0?"Final ":""}}Week {{weeknum || ""}} rankings for {{username}}</h1><br />
     </div>
     <div>
       <ranking-item
@@ -13,7 +13,7 @@
 
     <div>
       <br />
-      <nuxt-link :to="`/${year}/week/${this.weeknum}`">Return to week {{weeknum}} listings</nuxt-link>
+      <nuxt-link :to="`/${year}/week/${this.weeknum}`">Return to {{parseInt(weeknum)===0?"Final":""}} week {{weeknum || ""}} listings</nuxt-link>
     </div>
   </div>
 </template>

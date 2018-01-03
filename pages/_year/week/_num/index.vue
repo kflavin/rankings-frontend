@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-      <h1>Submissions for Week {{weeknum}}</h1><br/>
+      <h1>Submissions for {{parseInt(weeknum) === 0?"Final":""}} Week {{parseInt(weeknum) || ""}}</h1><br/>
     </div>
 
     <div>
@@ -93,6 +93,7 @@
           console.error(error)
         },
         update(data) {
+          console.log(data)
           return data.weeks[0]
         },
         fetchPolicy: 'network-only'
