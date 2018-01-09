@@ -9,7 +9,7 @@
 
 
     <div v-if="!currentWeek">Voting is open between Sunday and Tuesday.  <nuxt-link :to="'/'">Go back</nuxt-link></div>
-    <div v-else-if="submission"><nuxt-link :to="`/${currentYear}/submission/${username}/${weeknum}`">Your submission is in!</nuxt-link></div>
+    <div v-else-if="submission"><nuxt-link :to="'/'+(weeknum === 0 ? parseInt(currentYear)+1:currentYear)+`/submission/${username}/${weeknum}`">Your submission is in!</nuxt-link></div>
     <div v-else>
       <submit-item
       v-for="rank in this.positions"
