@@ -4,7 +4,14 @@
   "description": "Rankings front end",
   "author": "Kyle <Kyle.Flavin@gmail.com>",
   "private": true,
+  "config": {
+    "nuxt": {
+      "host": "$RANKINGS_HOST",
+      "port": "$RANKINGS_PORT"
+    }
+  },
   "scripts": {
+    "echo": "echo $RANKINGS_HOST",
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
@@ -28,6 +35,7 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.0.2",
+    "cross-var": "^1.1.0",
     "eslint": "^4.3.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-loader": "^1.9.0",

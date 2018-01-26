@@ -124,6 +124,9 @@ module.exports = {
   },
   css: [
     '@/assets/styles.css'
-  ]
-
+  ],
+  env: {
+    RANKINGS_HOST: process.env.RANKINGS_HOST || '127.0.0.1',
+    RANKINGS_PORT: process.env.RANKINGS_PORT || '5000'
+  }
 }

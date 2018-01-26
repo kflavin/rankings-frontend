@@ -29,11 +29,19 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 
 export default (ctx) => {
   var endpoint = ''
-  if (process.env.NODE_ENV === 'production') {
-    endpoint = 'https://rankings-backend.herokuapp.com/simple'
-  } else {
-    endpoint = 'http://127.0.0.1:5000/simple'
-  }
+  // if (process.env.NODE_ENV === 'production') {
+  //   if (process.env.BACKEND_HOST !== '') {
+  //     endpoint = `http://${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT}/simple`
+  //   } else {
+  //     endpoint = 'https://rankings-backend.herokuapp.com/simple'
+  //   }
+  //   // endpoint = 'http://127.0.0.1:5000/simple'
+  //   // endpoint = `${process.env.BACKEND_HOST}:${process.env.BACKEND_PORT}/simple`
+  // } else {
+  //   endpoint = 'http://127.0.0.1:5000/simple'
+  // }
+  endpoint = `http://${process.env.RANKINGS_HOST}:${process.env.RANKINGS_PORT}/simple`
+
 
   const httpLink = new HttpLink({ uri: endpoint })
 
