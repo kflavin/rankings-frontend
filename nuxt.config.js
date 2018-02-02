@@ -126,7 +126,15 @@ module.exports = {
     '@/assets/styles.css'
   ],
   env: {
+    // RANKINGS_HOST2: process.env.RANKINGS_HOST || '127.0.0.1',
+    // RANKINGS_PORT2: process.env.RANKINGS_PORT || '5000',
+    // TEST: 'hello world',
+    // RANKINGS_TEST: process.env.RANKINGS_TEST || 'nothing set',
     RANKINGS_HOST: process.env.RANKINGS_HOST || '127.0.0.1',
     RANKINGS_PORT: process.env.RANKINGS_PORT || '5000'
-  }
+  },
+  plugins: [
+    // ssr: false to only include it on client-side
+    { src: '~/plugins/vue-env.js' }
+  ]
 }

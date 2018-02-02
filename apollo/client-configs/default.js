@@ -40,15 +40,25 @@ export default (ctx) => {
   // } else {
   //   endpoint = 'http://127.0.0.1:5000/simple'
   // }
-  endpoint = `http://${process.env.RANKINGS_HOST}:${process.env.RANKINGS_PORT}/simple`
+  console.log(ctx)
 
+  if (ctx.isServer) {
+    endpoint = `http://${process.env.RANKINGS_HOST}:${process.env.RANKINGS_PORT}/simple`
+  } else {
+    endpoint = `http://${window.__NUXT__.env.RANKINGS_HOST}:${window.__NUXT__.env.RANKINGS_PORT}/simple`
+  }
+
+  console.log('Endpoint is: ')
+  console.log(endpoint)
+  console.log(process.env.RANKINGS_HOST)
+  console.log(process.env.RANKINGS_PORT)
 
   const httpLink = new HttpLink({ uri: endpoint })
 
   // auth token
   // let token = ctx.isServer ? ctx.req.session : window.__NUXT__.state.session
-  console.log('Configure the apollo client, and set the token')
-  console.log(ctx.store.state.token)
+  // console.log('Configure the apollo client, and set the token')
+  // console.log(ctx.store.state.token)
 
   // Add this to middleware, so it's re-evaluated with each request
   // let token = ctx.isServer ? ctx.req.session : localStorage.getItem('authToken')
