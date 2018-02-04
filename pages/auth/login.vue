@@ -112,20 +112,25 @@
 
             this.$router.push({path: '/'})
           }).catch(function(error) {
-            this.message = "Invalid login."
+            console.log(error.message)
+            if (error.message.match("Invalid User")) {
+              this.message = "Invalid User"
+            } else if (error.message.match("Please activate your account")) {
+              this.message = "Please activate your account!"
+            } else {
+              this.message = "Invalid login."
+            }
             this.error = true
           }.bind(this))
         } else {
           this.$apollo.mutate({
             mutation: createUser,
             variables: {
+              email: this.email,
               name: this.user,
               password: this.password,
-              active: true
             }
           }).then((result) => {
-            console.log("created user")
-            console.log(result)
             this.$router.push({name: 'auth-login', query: {message: "Please login!"}})
           }).catch(function(error) {
             console.log(error.message)
