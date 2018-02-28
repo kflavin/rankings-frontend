@@ -1,0 +1,68 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  BackendApp:
+    Type: String
+  FrontendApp:
+    Type: String
+  SgStackName:
+    Type: String
+    Description: SG Stack
+Resources:
+  RankingsFrontEnd: 
+    Type: "AWS::ECR::Repository"
+    # DependsOn: ECSRole
+    Properties: 
+      RepositoryName: !Ref FrontendApp
+      RepositoryPolicyText: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal: 
+              AWS:
+                # - !Sub 'arn:aws:iam::${AWS::AccountId}:user/${UserName}'
+                # - !GetAtt 'ECSRole.Arn'
+                - Fn::ImportValue: !Sub "${SgStackName}-rolearn"
+            Action: 
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:BatchCheckLayerAvailability"
+              - "ecr:PutImage"
+              - "ecr:InitiateLayerUpload"
+              - "ecr:UploadLayerPart"
+              - "ecr:CompleteLayerUpload"
+  RankingsBackEnd: 
+    Type: "AWS::ECR::Repository"
+    # DependsOn: ECSRole
+    Properties: 
+      RepositoryName: !Ref BackendApp
+      RepositoryPolicyText: 
+        Version: "2012-10-17"
+        Statement: 
+          - 
+            Sid: AllowPushPull
+            Effect: Allow
+            Principal: 
+              AWS:
+                # - !Join ['', ["arn:aws:iam::", !Ref 'AWS::AccountId', ":user/", !Ref 'UserName' ]]
+                # - !GetAtt 'ECSRole.Arn'
+                - Fn::ImportValue: !Sub "${SgStackName}-rolearn"
+            Action: 
+              - "ecr:GetDownloadUrlForLayer" 
+              - "ecr:BatchGetImage"
+              - "ecr:BatchCheckLayerAvailability"
+              - "ecr:PutImage"
+              - "ecr:InitiateLayerUpload"
+              - "ecr:UploadLayerPart"
+              - "ecr:CompleteLayerUpload"
+Outputs:
+  RankingsFrontEnd:
+    Value: !Ref 'RankingsFrontEnd'
+  RankingsBackEnd:
+    Value: !Ref 'RankingsBackEnd'
+  # Stack:
+  #   Value: !Ref AWS::StackName
+  #   Export:
+  #     Name: 
+    

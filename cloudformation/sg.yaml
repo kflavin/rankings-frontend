@@ -1,0 +1,242 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: Select a VPC that allows instances access to the Internet.
+Resources:
+  AlbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Join ['-', [!Ref 'AWS::StackName', AlbSecurityGroup]]
+      GroupDescription: ALB Security Group
+      VpcId: !Ref 'VpcId'
+      Tags: 
+        - 
+          Key: "Name"
+          Value: !Join ['-', [!Ref 'AWS::StackName', AlbSecurityGroup]]
+  RdsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Join ['-', [!Ref 'AWS::StackName', RdsSecurityGroup]]
+      GroupDescription: RDS Security Group
+      VpcId: !Ref 'VpcId'
+      Tags: 
+        - 
+          Key: "Name"
+          Value: !Join ['-', [!Ref 'AWS::StackName', RdsSecurityGroup]]
+  RdsSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'RdsSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '5432'
+      ToPort: '5432'
+      SourceSecurityGroupId: !Ref 'EcsSecurityGroup'
+  EcsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Join ['-', [EcsSecurityGroup, !Ref 'AWS::StackName']]
+      GroupDescription: ECS Security Group
+      VpcId: !Ref 'VpcId'
+      Tags: 
+        - 
+          Key: "Name"
+          Value: !Join ['-', [!Ref 'AWS::StackName', EcsSecurityGroup]]
+  EcsSecurityGroupHTTPinbound:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'EcsSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '80'
+      ToPort: '80'
+      CidrIp: 0.0.0.0/0
+  EcsSecurityGroupSSHinbound:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'EcsSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '22'
+      ToPort: '22'
+      CidrIp: 0.0.0.0/0
+  EcsSecurityGroupAPIEndports:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'EcsSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '5000'
+      ToPort: '5000'
+      CidrIp: 0.0.0.0/0
+  # EcsFromAlb:
+  #   Type: AWS::EC2::SecurityGroupIngress
+  #   Properties:
+  #     GroupId: !Ref 'EcsSecurityGroup'
+  #     IpProtocol: tcp
+  #     FromPort: '0'
+  #     ToPort: '65535'
+  #     SourceSecurityGroupId: !Ref 'AlbSecurityGroup'
+  AlbToEcsIngressEphemeral:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'EcsSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '31000'
+      ToPort: '61000'
+      SourceSecurityGroupId: !Ref 'AlbSecurityGroup'
+  EcsSecurityGroupALBports:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'EcsSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '31000'
+      ToPort: '61000'
+      SourceSecurityGroupId: !Ref 'EcsSecurityGroup'
+  EcsSecurityGroupFrontEndports:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'EcsSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '3000'
+      ToPort: '3000'
+      SourceSecurityGroupId: !Ref 'EcsSecurityGroup'
+  EcsSecurityGroupBackEndports:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'EcsSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '5000'
+      ToPort: '5000'
+      SourceSecurityGroupId: !Ref 'EcsSecurityGroup'
+  AlbIngressHttp:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'AlbSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '80'
+      ToPort: '80'
+      CidrIp: 0.0.0.0/0
+  AlbIngressApi:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'AlbSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '5000'
+      ToPort: '5000'
+      CidrIp: 0.0.0.0/0
+  AlbIngresstoEcs3000:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'EcsSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '3000'
+      ToPort: '3000'
+      SourceSecurityGroupId: !Ref 'AlbSecurityGroup'
+  ECSInstanceProfile: 
+        Type: AWS::IAM::InstanceProfile
+        Properties:
+            Path: /
+            Roles: 
+                - !Ref ECSRole
+  ECSRole:
+        Type: AWS::IAM::Role
+        Properties: 
+            Path: /
+            RoleName: !Sub ${AWS::StackName}-role
+            AssumeRolePolicyDocument: |
+                {
+                    "Statement": [{
+                        "Action": "sts:AssumeRole",
+                        "Effect": "Allow",
+                        "Principal": { 
+                            "Service": "ec2.amazonaws.com" 
+                        }
+                    }]
+                }
+            Policies: 
+                - PolicyName: ecs-service
+                  PolicyDocument: 
+                    Statement:
+                      -
+                        Effect: "Allow"
+                        Action: 
+                            - "ecs:CreateCluster"
+                            - "ecs:DeregisterContainerInstance"
+                            - "ecs:DiscoverPollEndpoint"
+                            - "ecs:Poll"
+                            - "ecs:RegisterContainerInstance"
+                            - "ecs:StartTelemetrySession"
+                            - "ecs:Submit*"
+                            - "logs:CreateLogStream"
+                            - "logs:PutLogEvents"
+                            - "ecr:GetAuthorizationToken"
+                            - "ecr:BatchCheckLayerAvailability"
+                            - "ecr:GetDownloadUrlForLayer"
+                            - "ecr:GetRepositoryPolicy"
+                            - "ecr:DescribeRepositories"
+                            - "ecr:ListImages"
+                            - "ecr:DescribeImages"
+                            - "ecr:BatchGetImage"
+                            - "ecr:InitiateLayerUpload"
+                            - "ecr:UploadLayerPart"
+                            - "ecr:CompleteLayerUpload"
+                            - "ecr:PutImage"
+                            - "sns:Subscribe"
+                        Resource: "*"
+                      # -
+                      #   Effect: "Allow"
+                      #   Action: 
+                      #       - "ssm:DescribeParameters"
+                      #       - "ssm:GetParameters"
+                      #       - "ssm:GetParameter"
+                      #   Resource: 
+                      #     -  
+                      #       Fn::Join:
+                      #         - ""
+                      #         -
+                      #           - "arn:aws:ssm:"
+                      #           -
+                      #             Ref: "AWS::Region"
+                      #           - ":"
+                      #           -
+                      #             Ref: "AWS::AccountId"
+                      #           - ":parameter/interstella*"
+                      #     - 
+                      #       Fn::Join:
+                      #         - ""
+                      #         -
+                      #           - "arn:aws:ssm:"
+                      #           -
+                      #             Ref: "AWS::Region"
+                      #           - ":"
+                      #           -
+                      #             Ref: "AWS::AccountId"
+                      #           - ":parameter/microservice*"
+Outputs:
+  SecurityGroup:
+    Value: !Ref 'EcsSecurityGroup'
+    Export:
+      Name: !Sub ${AWS::StackName}-EcsSG
+  AlbSecurityGroup:
+    Value: !Ref 'AlbSecurityGroup'
+    Export:
+      Name: !Sub ${AWS::StackName}-AlbSG
+  RdsSecurityGroup:
+    Value: !Ref 'RdsSecurityGroup'
+    Export:
+      Name: !Sub ${AWS::StackName}-RdsSG
+  Role:
+    Value: !Ref 'ECSInstanceProfile'
+    Export:
+      Name: !Sub ${AWS::StackName}-instanceprofile
+  RoleArn:
+    Value: !GetAtt 'ECSRole.Arn'
+    Export:
+      Name: !Sub ${AWS::StackName}-rolearn
+  # Stack:
+  #   Value: !Ref AWS::StackName
+  #   Export:
+  #     Name: 
+    
+
+
+
+

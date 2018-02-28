@@ -1,0 +1,514 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the ECS instances.
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: Select a VPC that allows instances access to the Internet.
+  SubnetId:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Select at two subnets in your selected VPC.
+  DesiredCapacity:
+    Type: Number
+    Default: '1'
+    Description: Number of instances to launch in your ECS cluster.
+  MaxSize:
+    Type: Number
+    Default: '1'
+    Description: Maximum number of instances that can be launched in your ECS cluster.
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues: [t2.micro, t2.small, t2.medium, t2.large, m3.medium, m3.large,
+      m3.xlarge, m3.2xlarge, m4.large, m4.xlarge, m4.2xlarge, m4.4xlarge, m4.10xlarge,
+      c4.large, c4.xlarge, c4.2xlarge, c4.4xlarge, c4.8xlarge, c3.large, c3.xlarge,
+      c3.2xlarge, c3.4xlarge, c3.8xlarge, r3.large, r3.xlarge, r3.2xlarge, r3.4xlarge,
+      r3.8xlarge, i2.xlarge, i2.2xlarge, i2.4xlarge, i2.8xlarge]
+    ConstraintDescription: Please choose a valid instance type.
+  dbuser:
+    Type: String
+    Description: dbuser
+  dbpassword:
+    Type: String
+    Description: dbpassword
+  dburi:
+    Type: String
+    Description: dburi
+  dbname:
+    Type: String
+    Description: dbname
+  host:
+    Type: String
+    Description: host
+  port:
+    Type: Number
+    Description: port
+    Default: 5432
+  RankingsHost:
+    Type: String
+    Description: host
+  RankingsPort:
+    Type: Number
+    Default: 5000
+    Description: port
+  DomainName:
+    Type: String
+    Description: Domain name
+  SubDomain:
+    Type: String
+    Description: Subdomain.  This is where app will reside.
+  BackendContainer:
+    Type: String
+  FrontendContainer:
+    Type: String
+  BackendApp:
+    Type: String
+  FrontendApp:
+    Type: String
+  SgStackName:
+    Type: String
+    Description: security group stack name.  sg stack should be built before this one.
+  RdsStackName:
+    Type: String
+    Description: rds stack name with endpoint and port exports
+  # EcrStackName:
+  #   Type: String
+  #   Description: ecr stack name.  ecr stack should be built first to export the instance profile
+Mappings:
+  AWSRegionToAMI:
+    us-east-1:
+      AMIID: ami-eca289fb
+    us-east-2:
+      AMIID: ami-446f3521
+    us-west-1:
+      AMIID: ami-9fadf8ff
+    us-west-2:
+      AMIID: ami-7abc111a
+    eu-west-1:
+      AMIID: ami-a1491ad2
+    eu-central-1:
+      AMIID: ami-54f5303b
+    ap-northeast-1:
+      AMIID: ami-9cd57ffd
+    ap-southeast-1:
+      AMIID: ami-a900a3ca
+    ap-southeast-2:
+      AMIID: ami-5781be34
+Resources:
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+  CloudwatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join ['-', [ECSLogGroup, !Ref 'AWS::StackName']]
+      RetentionInDays: 14
+  BackEndTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Join ['', [!Ref 'AWS::StackName', -backend]]
+      ContainerDefinitions:
+      - Name: !Ref BackendApp
+        Cpu: '10'
+        Essential: 'true'
+        Image: !Ref BackendContainer
+        Memory: '300'
+        Environment: 
+          - Name: DATABASE_URL
+            Value:
+              # First value is string to sub into, second is a map of values to use for the sub
+              # http://www.fischco.org/technica/2017/cloud-formation-sub/
+              Fn::Sub:
+                - postgres://${dbuser}:${dbpassword}@${dburi}:${dbport}/${dbname}
+                - dburi:
+                    Fn::ImportValue:
+                      !Sub ${RdsStackName}-endpoint
+                  dbport:
+                    Fn::ImportValue:
+                      !Sub ${RdsStackName}-port
+            # Value: !Sub postgres://${dbuser}:${dbpassword}@${dburi}/${dbname}
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref 'CloudwatchLogsGroup'
+            awslogs-region: !Ref 'AWS::Region'
+            awslogs-stream-prefix: !Ref BackendApp
+        # MountPoints:
+        # - ContainerPath: /usr/local/apache2/htdocs
+        #   SourceVolume: my-vol
+        PortMappings:
+          - ContainerPort: "8000"
+            HostPort: "5000"
+  FrontEndTask:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Join ['', [!Ref 'AWS::StackName', -frontend]]
+      ContainerDefinitions:
+      - Name: !Ref FrontendApp
+        Cpu: '10'
+        Essential: 'true'
+        Image: !Ref FrontendContainer
+        Memory: '300'
+        Environment: 
+          - Name: HOST
+            Value: !Sub ${host}
+          - Name: PORT
+            Value: !Sub ${port}
+          - Name: RANKINGS_HOST
+            Value: !GetAtt 'ECSALB.DNSName'
+            # Value: !Sub ${RankingsHost}
+          - Name: RANKINGS_PORT
+            Value: !Sub ${RankingsPort}
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref 'CloudwatchLogsGroup'
+            awslogs-region: !Ref 'AWS::Region'
+            awslogs-stream-prefix: !Ref FrontendApp
+        # MountPoints:
+        # - ContainerPath: /usr/local/apache2/htdocs
+        #   SourceVolume: my-vol
+        PortMappings:
+          - ContainerPort: "3000"
+            HostPort: "3000"
+      # - Name: busybox
+      #   Cpu: 10
+      #   Command: ['/bin/sh -c "while true; do echo ''<html> <head> <title>Amazon ECS
+      #       Sample App</title> <style>body {margin-top: 40px; background-color: #333;}
+      #       </style> </head><body> <div style=color:white;text-align:center> <h1>Amazon
+      #       ECS Sample App</h1> <h2>Congratulations!</h2> <p>Your application is now
+      #       running on a container in Amazon ECS.</p>'' > top; /bin/date > date ;
+      #       echo ''</div></body></html>'' > bottom; cat top date bottom > /usr/local/apache2/htdocs/index.html
+      #       ; sleep 1; done"']
+      #   EntryPoint: [sh, -c]
+      #   Essential: false
+      #   Image: busybox
+      #   Memory: 200
+      #   LogConfiguration:
+      #     LogDriver: awslogs
+      #     Options:
+      #       awslogs-group: !Ref 'CloudwatchLogsGroup'
+      #       awslogs-region: !Ref 'AWS::Region'
+      #       awslogs-stream-prefix: ecs-demo-app
+      #   VolumesFrom:
+      #   - SourceContainer: simple-app
+      # Volumes:
+      # - Name: my-vol
+  ECSALB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: ECSALB
+      Scheme: internet-facing
+      LoadBalancerAttributes:
+      - Key: idle_timeout.timeout_seconds
+        Value: '30'
+      Subnets: !Ref 'SubnetId'
+      SecurityGroups:
+        - Fn::ImportValue: !Sub "${SgStackName}-AlbSG"
+      # SecurityGroups: [!Ref 'EcsSecurityGroup']
+  ALBListenerFrontEnd:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    DependsOn: ECSServiceRole
+    Properties:
+      DefaultActions:
+      - Type: forward
+        TargetGroupArn: !Ref 'RankingsFrontEndTG'
+      LoadBalancerArn: !Ref 'ECSALB'
+      Port: '80'
+      Protocol: HTTP
+  ALBListenerRuleFrontEnd:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn: ALBListenerFrontEnd
+    Properties:
+      Actions:
+      - Type: forward
+        TargetGroupArn: !Ref 'RankingsFrontEndTG'
+      Conditions:
+      - Field: path-pattern
+        Values: [/]
+      ListenerArn: !Ref 'ALBListenerFrontEnd'
+      Priority: 1
+  ALBListenerBackEnd:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    DependsOn: ECSServiceRole
+    Properties:
+      DefaultActions:
+      - Type: forward
+        TargetGroupArn: !Ref 'RankingsBackEndTG'
+      LoadBalancerArn: !Ref 'ECSALB'
+      Port: '5000'
+      Protocol: HTTP
+  ALBListenerRuleBackEnd:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    DependsOn: ALBListenerBackEnd
+    Properties:
+      Actions:
+      - Type: forward
+        TargetGroupArn: !Ref 'RankingsBackEndTG'
+      Conditions:
+      - Field: path-pattern
+        Values: [/]
+      ListenerArn: !Ref 'ALBListenerBackEnd'
+      Priority: 1
+  RankingsFrontEndTG:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn: ECSALB
+    Properties:
+      HealthCheckIntervalSeconds: 10
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      Name: RankingsFrontEndTG
+      Port: 3000
+      Protocol: HTTP
+      UnhealthyThresholdCount: 2
+      VpcId: !Ref 'VpcId'
+  RankingsBackEndTG:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    DependsOn: ECSALB
+    Properties:
+      HealthCheckIntervalSeconds: 10
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      Matcher:
+        HttpCode: 404
+      Name: RankingsBackEndTG
+      Port: 8000
+      Protocol: HTTP
+      UnhealthyThresholdCount: 2
+      VpcId: !Ref 'VpcId'
+  ECSAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier: !Ref 'SubnetId'
+      LaunchConfigurationName: !Ref 'ContainerInstances'
+      MinSize: '1'
+      MaxSize: !Ref 'MaxSize'
+      DesiredCapacity: !Ref 'DesiredCapacity'
+    CreationPolicy:
+      ResourceSignal:
+        Timeout: PT15M
+    UpdatePolicy:
+      AutoScalingReplacingUpdate:
+        WillReplace: 'true'
+  ContainerInstances:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      # BlockDeviceMappings:
+      #   -
+      #     # DeviceName: "/dev/sdcz1"
+      #     DeviceName: "/dev/xvdcz"
+      #     Ebs:
+      #       VolumeSize: 5
+      #       VolumeType: gp2
+      # EbsOptimized: 'false'
+      ImageId: !FindInMap [AWSRegionToAMI, !Ref 'AWS::Region', AMIID]
+      # SecurityGroups: [!Ref 'EcsSecurityGroup']
+      SecurityGroups: 
+        - Fn::ImportValue: !Sub "${SgStackName}-EcsSG"
+      InstanceType: !Ref 'InstanceType'
+      # IamInstanceProfile: !Ref 'EC2InstanceProfile'
+      # IamInstanceProfile: !Sub 'arn:aws:iam::${AWS::AccountId}:instance-profile/${InstanceProfile}'
+      IamInstanceProfile:
+        Fn::ImportValue:
+          !Sub "${SgStackName}-instanceprofile"
+      KeyName: !Ref 'KeyName'
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+
+          echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
+          yum -y --security update
+          yum install -y aws-cfn-bootstrap git vim aws-cli
+
+
+          su - ec2-user -c "aws configure set default.region ${AWS::Region}"
+          mkdir /home/ec2-user/.docker
+          cat << EOF > /home/ec2-user/.docker/config.json
+          {
+          "credsStore": "ecr-login"
+          }
+          EOF
+          chown -R ec2-user. /home/ec2-user/.docker
+          git clone https://github.com/awslabs/amazon-ecr-credential-helper.git
+          cd amazon-ecr-credential-helper && make docker && cp bin/local/docker-credential-ecr-login /usr/local/bin/
+
+
+          # /opt/aws/bin/cfn-init -v --region ${AWS::Region} --stack ${AWS::StackName} --resource ECSLaunchConfiguration
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ECSAutoScalingGroup --region ${AWS::Region}
+  RankingsFrontEndService:
+    Type: AWS::ECS::Service
+    DependsOn: ALBListenerFrontEnd
+    Properties:
+      Cluster: !Ref 'ECSCluster'
+      DesiredCount: '1'
+      LoadBalancers:
+      - ContainerName: !Ref FrontendApp
+        ContainerPort: '3000'
+        TargetGroupArn: !Ref 'RankingsFrontEndTG'
+      Role: !Ref 'ECSServiceRole'
+      TaskDefinition: !Ref 'FrontEndTask'
+  RankingsBackEndService:
+    Type: AWS::ECS::Service
+    DependsOn: ALBListenerBackEnd
+    Properties:
+      Cluster: !Ref 'ECSCluster'
+      DesiredCount: '1'
+      LoadBalancers:
+      - ContainerName: !Ref BackendApp
+        ContainerPort: '8000'
+        TargetGroupArn: !Ref 'RankingsBackEndTG'
+      Role: !Ref 'ECSServiceRole'
+      TaskDefinition: !Ref 'BackEndTask'
+  ECSServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [ecs.amazonaws.com]
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+      - PolicyName: ecs-service
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action: ['elasticloadbalancing:DeregisterInstancesFromLoadBalancer', 'elasticloadbalancing:DeregisterTargets',
+              'elasticloadbalancing:Describe*', 'elasticloadbalancing:RegisterInstancesWithLoadBalancer',
+              'elasticloadbalancing:RegisterTargets', 'ec2:Describe*', 'ec2:AuthorizeSecurityGroupIngress']
+            Resource: '*'
+  # ServiceScalingTarget:
+  #   Type: AWS::ApplicationAutoScaling::ScalableTarget
+  #   DependsOn: service
+  #   Properties:
+  #     MaxCapacity: 2
+  #     MinCapacity: 1
+  #     ResourceId: !Join ['', [service/, !Ref 'ECSCluster', /, !GetAtt [service, Name]]]
+  #     RoleARN: !GetAtt [AutoscalingRole, Arn]
+  #     ScalableDimension: ecs:service:DesiredCount
+  #     ServiceNamespace: ecs
+  # ServiceScalingPolicy:
+  #   Type: AWS::ApplicationAutoScaling::ScalingPolicy
+  #   Properties:
+  #     PolicyName: AStepPolicy
+  #     PolicyType: StepScaling
+  #     ScalingTargetId: !Ref 'ServiceScalingTarget'
+  #     StepScalingPolicyConfiguration:
+  #       AdjustmentType: PercentChangeInCapacity
+  #       Cooldown: 60
+  #       MetricAggregationType: Average
+  #       StepAdjustments:
+  #       - MetricIntervalLowerBound: 0
+  #         ScalingAdjustment: 200
+  # ALB500sAlarmScaleUp:
+  #   Type: AWS::CloudWatch::Alarm
+  #   Properties:
+  #     EvaluationPeriods: '1'
+  #     Statistic: Average
+  #     Threshold: '10'
+  #     AlarmDescription: Alarm if our ALB generates too many HTTP 500s.
+  #     Period: '60'
+  #     AlarmActions: [!Ref 'ServiceScalingPolicy']
+  #     Namespace: AWS/ApplicationELB
+  #     Dimensions:
+  #       - Name: LoadBalancer
+  #         Value: !GetAtt 
+  #           - ECSALB
+  #           - LoadBalancerFullName
+  #     ComparisonOperator: GreaterThanThreshold
+  #     MetricName: HTTPCode_ELB_5XX_Count
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [ec2.amazonaws.com]
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+      - PolicyName: ecs-service
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action: ['ecs:CreateCluster', 'ecs:DeregisterContainerInstance', 'ecs:DiscoverPollEndpoint',
+              'ecs:Poll', 'ecs:RegisterContainerInstance', 'ecs:StartTelemetrySession',
+              'ecs:Submit*', 'logs:CreateLogStream', 'logs:PutLogEvents']
+            Resource: '*'
+  AutoscalingRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [application-autoscaling.amazonaws.com]
+          Action: ['sts:AssumeRole']
+      Path: /
+      Policies:
+      - PolicyName: service-autoscaling
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action: ['application-autoscaling:*', 'cloudwatch:DescribeAlarms', 'cloudwatch:PutMetricAlarm',
+              'ecs:DescribeServices', 'ecs:UpdateService']
+            Resource: '*'
+  DNSRecord:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneName: !Sub ${DomainName}.
+      Comment: Zone apex alias targeted to myELB LoadBalancer.
+      RecordSets:
+      - Name: !Sub ${SubDomain}.${DomainName}.
+        Type: A
+        AliasTarget:
+          HostedZoneId: !GetAtt ECSALB.CanonicalHostedZoneID
+          DNSName: !GetAtt ECSALB.DNSName
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles: [!Ref 'EC2Role']
+      # RepositoryPolicyText: 
+      #   Version: "2012-10-17"
+      #   Statement: 
+      #     - 
+      #       Sid: AllowPushPull
+      #       Effect: Allow
+      #       Principal: 
+      #         AWS: 
+      #           - "arn:aws:iam::123456789012:user/Bob"
+      #           - "arn:aws:iam::123456789012:user/Alice"
+      #       Action: 
+      #         - "ecr:GetDownloadUrlForLayer"
+      #         - "ecr:BatchGetImage"
+      #         - "ecr:BatchCheckLayerAvailability"
+      #         - "ecr:PutImage"
+      #         - "ecr:InitiateLayerUpload"
+      #         - "ecr:UploadLayerPart"
+      #         - "ecr:CompleteLayerUpload"
+Outputs:
+  FrontEndService:
+    Value: !Ref 'RankingsFrontEndService'
+  BackEndService:
+    Value: !Ref 'RankingsBackEndService'
+  ecscluster:
+    Value: !Ref 'ECSCluster'
+  ECSALB:
+    Description: Your ALB DNS URL
+    Value: !Join ['', [!GetAtt [ECSALB, DNSName]]]
+  FrontEndTask:
+    Value: !Ref 'FrontEndTask'
+  BackEndTask:
+    Value: !Ref 'BackEndTask'
+  # ECSALB:
+  #   Value: !GetAtt 'ECSRole.Arn'
+  #   Export:
+  #     Name: !Sub ${AWS::StackName}-dns

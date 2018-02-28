@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  DBName:
+    Type: String
+    Description: Database name
+  UserName:
+    Type: String
+    Description: Username
+  Password:
+    Type: String
+    Description: Password
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: Select a VPC that allows instances access to the Internet.
+  Subnets:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: A list of subnets for the subnet group
+  StorageSize:
+    Type: Number
+    Default: 5
+    Description: Size of DB in GB
+    MinValue: 5
+    MaxValue: 15
+    ConstraintDescription: Size must be between 5 and 15 GB
+  InstanceClass:
+    Type: String
+    Default: db.t2.micro
+    Description: Database instance class
+    AllowedValues: ["db.t2.micro"]
+    ConstraintDescription: Only db.t2.micro allowed.
+  SgStackName:
+    Type: String
+    Description: Security Group Stack
+Resources:
+  DB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBName: !Ref DBName
+      VPCSecurityGroups:
+      - Fn::ImportValue: !Sub "${SgStackName}-RdsSG"
+      # DBSecurityGroups:
+      # - Ref: MyDbSecurityByEC2SecurityGroup
+      # - Ref: MyDbSecurityByCIDRIPGroup
+      # - Fn::ImportValue: !Sub "${SgStackName}-securitygroup"
+      AllocatedStorage: !Ref StorageSize
+      DBInstanceClass: !Ref InstanceClass
+      Engine: postgres
+      MasterUsername: !Ref 'UserName'
+      MasterUserPassword: !Ref 'Password'
+      PubliclyAccessible: false
+      DBSubnetGroupName: !Ref SubnetGroup
+      StorageType: Standard
+      DBInstanceIdentifier: !Ref DBName
+    DeletionPolicy: Delete
+    # DeletionPolicy: Snapshot
+  SubnetGroup:
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties: 
+      DBSubnetGroupDescription: Subnets for group
+      DBSubnetGroupName: RdsSubnetGroup
+      SubnetIds: !Ref Subnets
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-SubnetGroup
+Outputs:
+  UserName:
+    Value: !Ref UserName
+  EndPointAddress:
+    Value: !GetAtt 'DB.Endpoint.Address'
+    Export:
+      Name: !Sub ${AWS::StackName}-endpoint
+  EndPointPort:
+    Value: !GetAtt 'DB.Endpoint.Port'
+    Export:
+      Name: !Sub ${AWS::StackName}-port
+  # RankingsFrontEnd:
+  #   Value: !Ref 'RankingsFrontEnd'
+  # RankingsBackEnd:
+  #   Value: !Ref 'RankingsBackEnd'
+  # Role:
+  #   Value: !Ref 'ECSInstanceProfile'
+  #   Export:
+  #     Name: !Sub ${AWS::StackName}-instanceprofile
+  # Stack:
+  #   Value: !Ref AWS::StackName
+  #   Export:
+  #     Name: 
+    
