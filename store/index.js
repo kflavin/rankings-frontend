@@ -14,7 +14,8 @@ const createStore = () => {
       token: '',
       currentYear: 0,
       onServer: false,
-      submitted: null
+      submitted: null,
+      roleId: 0
     },
     mutations,
     getters,

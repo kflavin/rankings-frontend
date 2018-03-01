@@ -71,7 +71,7 @@
   import signInUser from '@/apollo/queries/auth/signInUser'
   import createUser from '@/apollo/queries/auth/createUser'
   import { setToken } from '@/utils/auth'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
 
   export default {
     mounted: function() {
@@ -79,7 +79,7 @@
         this.$router.push({path: '/'})
       }
     },
-    computed: mapGetters(['isAuthenticated']),
+    computed: mapGetters(['isAuthenticated', 'getRoleId']),
     data: function() {
       return {
         login: true,
@@ -91,6 +91,7 @@
       }
     },
     methods: {
+      ...mapMutations(['setRoleId']),
       confirm: function() {
         const { user, email, password } = this.$data;
 
@@ -105,6 +106,12 @@
             const user = result.data.loginUser
             const id = result.data.loginUser.userid
             const token = result.data.loginUser.token
+            const roleid = result.data.loginUser.roleid
+            
+            console.log("Setting role id " + roleid)
+            this.setRoleId(roleid)
+            console.log("Getting role id " + this.getRoleId)
+
 //            this.saveUser(id, token, this.user)
 
 //            setToken(token, Date.now() + 14400000)

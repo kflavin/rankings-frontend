@@ -20,6 +20,14 @@ export const mutations = {
     state.username = ''
   },
 
+  setRoleId: function (state, roleid) {
+    console.log('Set the role id ' + roleid)
+    state.roleId = roleid
+  },
+  clearRoleId: function (state) {
+    state.roleId = 0
+  },
+
   setCurrentUserId: function (state, userId) {
     state.userId = userId
   },

@@ -4,6 +4,7 @@ mutation SigninUser($username: String!, $password: String!) {
     password: $password
   ) {
     token,
-    userid
+    userid,
+    roleid
   }
 }

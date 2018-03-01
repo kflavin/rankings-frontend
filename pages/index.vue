@@ -61,7 +61,7 @@ export default {
     console.log("error captured hook")
   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'currentYear']),
+    ...mapGetters(['isAuthenticated', 'currentYear', 'getRoleId']),
     currentYr: {
       get: function() {
         console.log("get current year " + this.currentYear + " " + this.selectedYear)
@@ -84,6 +84,7 @@ export default {
   },
   created() {
     console.log("created index")
+    console.log("The role id is: " + this.getRoleId)
   },
   mounted() {
     console.log("mounted year")

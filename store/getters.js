@@ -17,6 +17,9 @@ export const getters = {
   },
   isSubmitted: function (state) {
     return state.submitted
+  },
+  getRoleId: function (state) {
+    return state.roleId
   }
 }
 
