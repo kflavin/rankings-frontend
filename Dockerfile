@@ -1,7 +1,9 @@
 #FROM alpine:3.7
 FROM mhart/alpine-node:8.3.0
 MAINTAINER Kyle Flavin
-# [200~docker run -it -e DATABASE_URL=postgresql://<user>@docker.for.mac.localhost:5432/table -p 5000:8000 rankings-backend:latest
+
+# docker run -it -e RANKINGS_HOST=docker.for.mac.localhost -e RANKINGS_PORT=5000 -e HOST=0.0.0.0 -e PORT=3000 -p 3000:3000 rankings-frontend:latest
+
 
 RUN apk update
 
