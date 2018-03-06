@@ -28,6 +28,7 @@ import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
 export default (ctx) => {
+  console.log('Initializizing network config')
   var endpoint = ''
   // if (process.env.NODE_ENV === 'production') {
   //   if (process.env.BACKEND_HOST !== '') {
@@ -40,18 +41,22 @@ export default (ctx) => {
   // } else {
   //   endpoint = 'http://127.0.0.1:5000/simple'
   // }
-  console.log(ctx)
-
+  // console.log(ctx)
   if (ctx.isServer) {
+    // ctx.req.session.MYUSER = "MYUSER"
+    // console.log("user is")
+    // console.log(ctx.req.session.MYUSER)
     endpoint = `http://${process.env.RANKINGS_HOST}:${process.env.RANKINGS_PORT}/simple`
   } else {
+    // ctx.req.session.MYUSER = "MYUSER2"
+    // console.log(ctx)
     endpoint = `http://${window.__NUXT__.env.RANKINGS_HOST}:${window.__NUXT__.env.RANKINGS_PORT}/simple`
   }
 
-  console.log('Endpoint is: ')
-  console.log(endpoint)
-  console.log(process.env.RANKINGS_HOST)
-  console.log(process.env.RANKINGS_PORT)
+  // console.log('Endpoint is: ')
+  // console.log(endpoint)
+  // console.log(process.env.RANKINGS_HOST)
+  // console.log(process.env.RANKINGS_PORT)
 
   const httpLink = new HttpLink({ uri: endpoint })
 

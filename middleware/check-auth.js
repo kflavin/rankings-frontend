@@ -1,20 +1,16 @@
 import { getUserNameFromLocalStorage, getUserIdFromLocalStorage, getTokenFromLocalStorage } from '~/utils/auth'
+import teams from '~/apollo/queries/allTeams.gql'
 
-export default function ({ isServer, store, req }) {
-  console.log('check-auth middleware')
-
+export default function ({ isServer, store, req, app }) {
   if (isServer) {
-    console.log('request, setOnServer ')
+    console.log('check-auth middleware on the server')
     // console.log(req)
     // console.log(store)
-    console.log(req.headers)
-    console.log(req.data)
     store.commit('setOnServer', true)
   }
 
   if (!isServer) {
-    // console.log(req)
-    console.log('setting store...')
+    console.log('check-auth middleware on the client')
     const username = getUserNameFromLocalStorage()
     const userid = getUserIdFromLocalStorage()
     const token = getTokenFromLocalStorage()
@@ -23,6 +19,16 @@ export default function ({ isServer, store, req }) {
     store.commit('setCurrentUserName', username)
     store.commit('setToken', token)
   }
+
+  // console.log(app)
+  // console.log('---------------------------------------------------------------APP')
+  // console.log(Object.keys(app.apolloProvider.defaultClient))
+  // app.apolloProvider.defaultClient.query({'query': teams}).then(function (res) {
+  //   console.log('querying')
+  //   console.log(res)
+  // })
+
+  // console.log(app.apolloProvider.mutate)
 
   // If nuxt generate, pass this middleware
   // if (isServer && !req) return

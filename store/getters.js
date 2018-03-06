@@ -9,7 +9,6 @@ export const getters = {
     return state.onServer
   },
   getUserName: function (state) {
-    console.log(state)
     return state.username
   },
   getToken: function (state) {
@@ -20,6 +19,12 @@ export const getters = {
   },
   getRoleId: function (state) {
     return state.roleId
+  },
+  getRole: function (state) {
+    return state.role
+  },
+  getUser: function (state) {
+    return state.user
   }
 }
 
