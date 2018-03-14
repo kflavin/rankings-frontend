@@ -39,36 +39,37 @@ import years from '~/apollo/queries/allYears'
 //import allWeeks from '~/apollo/queries/allWeeks.gql'
 import weeks from '~/apollo/queries/allWeeksSimple.gql'
 import { mapGetters } from 'vuex'
+import axios from 'axios'
 
 export default {
-  updated() {
-    console.log("updated hook")
-//    this.$store.commit('setCurrentYear', this.selectedYear)
-  },
-  beforeUpdate() {
-    console.log("before update hook")
-  },
-  beforeMount() {
-    console.log("before mount hook")
-  },
-  activated() {
-    console.log("activated hook")
-  },
-  deactivated() {
-    console.log("deactivated hook")
-  },
-  errorCapturedU() {
-    console.log("error captured hook")
-  },
+//   updated() {
+//     console.log("updated hook")
+// //    this.$store.commit('setCurrentYear', this.selectedYear)
+//   },
+//   beforeUpdate() {
+//     console.log("before update hook")
+//   },
+//   beforeMount() {
+//     console.log("before mount hook")
+//   },
+//   activated() {
+//     console.log("activated hook")
+//   },
+//   deactivated() {
+//     console.log("deactivated hook")
+//   },
+//   errorCapturedU() {
+//     console.log("error captured hook")
+//   },
   computed: {
-    ...mapGetters(['isAuthenticated', 'currentYear', 'getRoleId']),
+    ...mapGetters(['isAuthenticated', 'currentYear', 'getRoleId', 'getRole', 'getUser']),
     currentYr: {
       get: function() {
-        console.log("get current year " + this.currentYear + " " + this.selectedYear)
+        // console.log("get current year " + this.currentYear + " " + this.selectedYear)
         return this.currentYear
       },
       set: function(val) {
-        console.log("currentYr setter, year=" + val)
+        // console.log("currentYr setter, year=" + val)
         this.$store.commit('setCurrentYear', val)
       }
 
@@ -82,14 +83,16 @@ export default {
     runit: function() {
     }
   },
-  created() {
-    console.log("created index")
-    console.log("The role id is: " + this.getRoleId)
-  },
-  mounted() {
-    console.log("mounted year")
-    console.log(this.currentYr)
-  },
+  // created() {
+  //   console.log("created index")
+  //   console.log("The role id is: " + this.getRoleId)
+  //   console.log("The other role id is: " + this.getRole)
+  //   console.log(this.getUser)
+  // },
+  // mounted() {
+  //   console.log("mounted year")
+  //   console.log(this.currentYr)
+  // },
   data: function() {
     return {
       allWeeks: [],
@@ -98,24 +101,35 @@ export default {
   },
   fetch(context) {
     console.log("fetch")
+    axios.get("http://localhost:5000/status/").then(function(res) {
+        if (context.isServer) {
+          console.log("fetching data on server")
+          // console.log(res.data)
+
+        } else {
+          console.log("fetching data on the client")
+          // console.log(res.data)
+        }
+    })
+
   },
-//  asyncData(context) {
-//    console.log("setting up async data")
-//    return {
-//      selectedYear: 0
-//    }
-//  },
+ asyncData(context) {
+   console.log("setting up async data")
+   return {
+     selectedYear: 0
+   }
+ },
   apollo: {
     weeks: {
 //      prefetch: true,
       query: weeks,
       variables() {
-        console.log("apollo variables.  year=" + this.currentYear)
+        // console.log("apollo variables.  year=" + this.currentYear)
         return {year: this.currentYear}
       },
       update(data) {
-        console.log("update weeks yr=" + this.currentYr)
-        console.log(data)
+        // console.log("update weeks yr=" + this.currentYr)
+        // console.log(data)
         // If the year hasn't been set in app state, then set it now from the server response.
         if (this.currentYr == 0) {
           this.currentYr = data.weeks[0].date.split("-")[0]
@@ -126,7 +140,7 @@ export default {
     allYears: {
       query: years,
       update: function(data) {
-        console.log("update years")
+        // console.log("update years")
         return data.allYears
       }
     }

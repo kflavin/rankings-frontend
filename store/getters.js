@@ -1,6 +1,6 @@
 export const getters = {
   isAuthenticated: function (state) {
-    return !!state.userId
+    return state.user !== undefined && Object.keys(state.user).length > 0
   },
   currentYear: function (state) {
     return state.currentYear
@@ -16,12 +16,6 @@ export const getters = {
   },
   isSubmitted: function (state) {
     return state.submitted
-  },
-  getRoleId: function (state) {
-    return state.roleId
-  },
-  getRole: function (state) {
-    return state.role
   },
   getUser: function (state) {
     return state.user

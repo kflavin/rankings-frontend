@@ -1,5 +1,13 @@
 export const mutations = {
 
+  setUser: function (state, user) {
+    state.user = user
+  },
+
+  deleteUser: function (state) {
+    state.user = {}
+  },
+
   setSubmitted: function (state, submitted) {
     state.submitted = submitted
   },
@@ -18,11 +26,6 @@ export const mutations = {
   },
   clearCurrentUserName: function (state, username) {
     state.username = ''
-  },
-
-  setRoleId: function (state, roleid) {
-    console.log('Set the role id ' + roleid)
-    state.roleId = roleid
   },
   clearRoleId: function (state) {
     state.roleId = 0

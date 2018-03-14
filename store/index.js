@@ -4,6 +4,8 @@ import mutations from './mutations'
 import getters from './getters'
 import actions from './actions'
 
+console.log('creating store')
+
 const createStore = () => {
   return new Vuex.Store({
     state: {
@@ -14,8 +16,7 @@ const createStore = () => {
       token: '',
       currentYear: 0,
       onServer: false,
-      submitted: null,
-      roleId: 0
+      submitted: null
     },
     mutations,
     getters,

@@ -72,12 +72,17 @@
   import createUser from '@/apollo/queries/auth/createUser'
   import { setToken } from '@/utils/auth'
   import { mapGetters, mapMutations } from 'vuex'
+  import axios from '~/plugins/axios'
+  import cookie from 'js-cookie'
 
   export default {
     mounted: function() {
       if (this.isAuthenticated) {
         this.$router.push({path: '/'})
       }
+    },
+    created: function() {
+      console.log("Login page created")
     },
     computed: mapGetters(['isAuthenticated', 'getRoleId']),
     data: function() {
@@ -90,8 +95,20 @@
         error: false
       }
     },
+    fetch({isServer}) {
+      if (isServer) {
+        console.log("fetch from the server")
+      } else {
+        console.log("fetch from the client")
+      }
+    },
+    asyncData(ctx) {
+      console.log("asyncData hook")
+      // console.log(req)
+      // console.log(res)
+    },
     methods: {
-      ...mapMutations(['setRoleId']),
+      ...mapMutations(['setRoleId', 'setUser']),
       confirm: function() {
         const { user, email, password } = this.$data;
 
@@ -101,25 +118,43 @@
             variables: {
               username: this.user,
               password: this.password
+            },
+            update: (store, data) => {
+              // console.log("UPDATING FOLLOWING LOGIN")
+              // console.log(store)
+              // console.log(data)
+              // // store.state('setRole', 52)
+              // console.log(this.$store)
+              // this.$store.commit('setRole', 52)
+              this.setUser(data.data.loginUser)
             }
           }).then((result) => {
+            console.log("LOGGED IN AS ")
+            console.log(result.data)
             const user = result.data.loginUser
             const id = result.data.loginUser.userid
             const token = result.data.loginUser.token
             const roleid = result.data.loginUser.roleid
-            
-            console.log("Setting role id " + roleid)
-            this.setRoleId(roleid)
-            console.log("Getting role id " + this.getRoleId)
+
+            // var status = axios.get("http://localhost:5000/status/").then(function(res) {
+            //   console.log("status is")
+            //   console.log(res)
+            // })
+
+            // console.log("Setting role id " + roleid)
+            // this.setRoleId(roleid)
+            // console.log("Getting role id " + this.getRoleId)
 
 //            this.saveUser(id, token, this.user)
 
-//            setToken(token, Date.now() + 14400000)
-            setToken(user, this.user, Date.now() + 14400000)
+            //setToken(token, Date.now() + 14400000)
+            this.$store.dispatch('login', user).then(() => { console.log('User has been logged in!')})
+            // cookie.set("rankings2", "test2")
+            // sessionStorage.setItem("rankings3", "test3")
 
             this.$router.push({path: '/'})
           }).catch(function(error) {
-            console.log(error.message)
+            // console.log(error.message)
             if (error.message.match("Invalid User")) {
               this.message = "Invalid User"
             } else if (error.message.match("Please activate your account")) {
@@ -140,7 +175,7 @@
           }).then((result) => {
             this.$router.push({name: 'auth-login', query: {message: "Please login!"}})
           }).catch(function(error) {
-            console.log(error.message)
+            // console.log(error.message)
             if(error.message == "GraphQL error: User already exists.") {
               this.message = "User already exists."
             } else {

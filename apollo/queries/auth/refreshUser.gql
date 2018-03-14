@@ -1,0 +1,9 @@
+mutation RefreshUser($token: String!) {
+  refreshUser(
+    token: $token
+  ) {
+    userid,
+    roleid,
+    username
+  }
+}
