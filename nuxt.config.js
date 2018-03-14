@@ -1,9 +1,12 @@
-var scriptCode = require('./utils/scriptCode.js')
+// var scriptCode = require('./utils/scriptCode.js')
 // import { preBidHeaderOne } from '@/utils/scriptCode'
-console.log('loading')
-console.log(scriptCode)
-console.log('loaded')
-console.log(scriptCode.preBidHeaderOne)
+// console.log('loading')
+// console.log(scriptCode)
+// console.log('loaded')
+// console.log(scriptCode.preBidHeaderOne)
+
+const session = require('express-session')
+const bodyParser = require('body-parser')
 
 module.exports = {
   /*
@@ -88,7 +91,8 @@ module.exports = {
       plugins: {
         'postcss-custom-properties': false
       }
-    }
+    },
+    vendor: ['axios']
     /*
     ** Run ESLint on save
     */
@@ -114,13 +118,15 @@ module.exports = {
     // networkInterfaces: {
     //   default: '~/apollo/network-interfaces/default.js'
     // }
+    // clientConfigs: {
     clientConfigs: {
       default: '~/apollo/client-configs/default.js'
+      // nuxt: '~/apollo/client-configs/nuxt.js'
       // test: '~/apollo/client-configs/test.js'
     }
   },
   router: {
-    middleware: 'check-auth'
+    middleware: ['check-auth']
   },
   css: [
     '@/assets/styles.css'
@@ -131,10 +137,20 @@ module.exports = {
     // TEST: 'hello world',
     // RANKINGS_TEST: process.env.RANKINGS_TEST || 'nothing set',
     RANKINGS_HOST: process.env.RANKINGS_HOST || '127.0.0.1',
-    RANKINGS_PORT: process.env.RANKINGS_PORT || '5000'
+    RANKINGS_PORT: process.env.RANKINGS_PORT || '5000',
+    nuxtUrl: process.env.NUXT_URL || 'http://localhost:3000'
   },
   plugins: [
     // ssr: false to only include it on client-side
     { src: '~/plugins/vue-env.js' }
+  ],
+  serverMiddleware: [
+    bodyParser.json(),
+    session({
+      secret: process.env.FRONTEND_KEY || 'secret-key',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { maxAge: 60000 }
+    })
   ]
 }
