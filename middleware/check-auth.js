@@ -1,15 +1,13 @@
 import { getUserNameFromLocalStorage, getUserIdFromLocalStorage, getTokenFromLocalStorage } from '~/utils/auth'
 import teams from '~/apollo/queries/allTeams.gql'
 
-export default function ({ isServer, store, req, app }) {
-  if (isServer) {
+export default function ({ store, req, app }) {
+  if (process.server) {
     console.log('check-auth middleware on the server')
     // console.log(req)
     // console.log(store)
     store.commit('setOnServer', true)
-  }
-
-  if (!isServer) {
+  } else {
     console.log('check-auth middleware on the client')
     const username = getUserNameFromLocalStorage()
     const userid = getUserIdFromLocalStorage()

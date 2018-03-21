@@ -26,6 +26,7 @@
 import { ApolloLink } from 'apollo-link'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { getCookies } from '@/utils/helpers'
 
 export default (ctx) => {
   console.log('Initializizing network config')
@@ -42,7 +43,7 @@ export default (ctx) => {
   //   endpoint = 'http://127.0.0.1:5000/simple'
   // }
   // console.log(ctx)
-  if (ctx.isServer) {
+  if (process.server) {
     // ctx.req.session.MYUSER = "MYUSER"
     // console.log("user is")
     // console.log(ctx.req.session.MYUSER)
@@ -81,10 +82,15 @@ export default (ctx) => {
 
   // middleware
   const middlewareLink = new ApolloLink((operation, forward) => {
-    let token = ctx.isServer ? ctx.req.session : localStorage.getItem('authToken')
+    var token = process.server ? getCookies(ctx.req.headers.cookie).rankings : getCookies(document.cookie).rankings
     operation.setContext({
       headers: { authorization: `Bearer ${token}` }
     })
+    // let token = ctx.isServer ? ctx.req.session : localStorage.getItem('authToken')
+    // operation.setContext({
+    //   headers: { authorization: `Bearer ${token}` }
+    // })
+
     return forward(operation)
   })
   const link = middlewareLink.concat(httpLink)

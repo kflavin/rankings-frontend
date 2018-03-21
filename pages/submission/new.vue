@@ -78,7 +78,7 @@
     },
     mounted() {
       console.log("New Submission, mounted")
-      var link = this.$apollo.vm.$root._apolloProvider.clients.defaultClient.link
+      // var link = this.$apollo.vm.$root._apolloProvider.clients.defaultClient.link
       // console.log(this.$apollo.vm.$root._apolloProvider.clients.defaultClient)
       // link.request()
 
@@ -114,24 +114,33 @@
       },
       submit() {
 
-        var userid = this.$store.state.userId
+        var user = this.$store.state.user
+        console.log("user id")
+        console.log(user)
 
         if (this.selections.length !== this.positions) {
           alert("Invalid number of entries")
           return
         }
+        console.log("Submnitting the following")
+        console.log(this.week.id)
+        console.log(user)
+        console.log(this.selections)
 
 
         this.$apollo.mutate({
           mutation: submitUserRankings,
           variables: {
             weekid: parseInt(this.week.id),
-            userid: userid,
+            userid: user.userid,
             teams: this.selections
           }
         }).then(data => {
           this.$emit('selectionsSubmitted')
           this.$router.push({name: "year-week-num", params: {year: this.year, num: this.week.num}})
+        }).catch(error => {
+          console.log("got an error submitting")
+          console.log(error)
         })
       }
     },
